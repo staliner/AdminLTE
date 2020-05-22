@@ -117,11 +117,11 @@ function testCookies() {
   }
 
   // set and read cookie
-  document.cookie = "cookietest=1";
+  document.cookie = "cookietest=1, SameSite=Lax";
   var ret = document.cookie.indexOf("cookietest=") !== -1;
 
   // delete cookie
-  document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+  document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT, SameSite=Lax";
 
   return ret;
 }
