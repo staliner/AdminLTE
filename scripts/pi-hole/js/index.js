@@ -819,7 +819,7 @@ function updateSummaryData(runOnce) {
     });
 }
 
-$(document).ready(function () {
+function initpage() {
   // Pull in data via AJAX
   updateSummaryData();
 
@@ -1137,7 +1137,7 @@ $(document).ready(function () {
     // Pull in data via AJAX
     updateForwardDestinationsPie();
   }
-});
+}
 
 //destroy all chartjs customTooltips on window resize
 window.addEventListener("resize", function () {

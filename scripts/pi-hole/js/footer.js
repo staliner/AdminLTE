@@ -267,6 +267,10 @@ $(document).ready(function () {
   initTheme();
   initCPUtemp();
 
+  if (typeof initpage === "function") {
+    setTimeout(initpage, 100);
+  }
+
   // Run check immediately after page loading ...
   checkMessages();
   // ... and once again with five seconds delay
