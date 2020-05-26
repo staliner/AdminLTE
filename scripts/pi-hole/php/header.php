@@ -9,7 +9,6 @@
     require "scripts/pi-hole/php/auth.php";
     require "scripts/pi-hole/php/password.php";
     require_once "scripts/pi-hole/php/FTL.php";
-    require "scripts/pi-hole/php/theme.php";
     $scriptname = basename($_SERVER['SCRIPT_FILENAME']);
 
     check_cors();
@@ -166,11 +165,6 @@
     <meta name="msapplication-TileImage" content="img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#367fa9">
 
-<?php if ($darkmode) { ?>
-    <style>
-        html { background-color: #000; }
-    </style>
-<?php } ?>
     <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css">
     <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="style/vendor/font-awesome-5.13.0/css/all.min.css">
@@ -185,7 +179,6 @@
 <?php } ?>
     <link rel="stylesheet" href="style/vendor/icheck-material.min.css">
     <link rel="stylesheet" href="style/pi-hole.css">
-    <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
 
     <script src="scripts/vendor/jquery.min.js"></script>
@@ -221,7 +214,6 @@ if($auth) {
 ?>
 
 <!-- Send token to JS -->
-<div id="checkbox_theme" hidden><?php echo $checkbox_theme_name; ?><?php if($checkbox_theme_name !== $checkbox_theme_variant){ echo "-$checkbox_theme_variant"; } ?></div>
 <div id="enableTimer" hidden><?php if(file_exists("../custom_disable_timer")){ echo file_get_contents("../custom_disable_timer"); } ?></div>
 <div class="wrapper">
     <header class="main-header">
