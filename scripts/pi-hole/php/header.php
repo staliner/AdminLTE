@@ -180,6 +180,9 @@
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
 </head>
+<style>
+body { display:none; }
+</style>
 <body class="hold-transition sidebar-mini">
 <noscript>
     <!-- JS Warning -->

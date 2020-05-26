@@ -271,6 +271,7 @@ $(document).ready(function () {
   initBoxedLayout();
   initTheme();
   initCPUtemp();
+  document.body.style.display = "block";
 
   if (typeof initpage === "function") {
     setTimeout(initpage, 100);
