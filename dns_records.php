@@ -89,9 +89,11 @@
     </div>
 </div>
 
-<script src="scripts/pi-hole/js/ip-address-sorting.js"></script>
-<script src="scripts/pi-hole/js/customdns.js"></script>
-
 <?php
-require "scripts/pi-hole/php/footer.php";
+    $extra_scripts = [
+        "scripts/pi-hole/js/ip-address-sorting.js",
+        "scripts/pi-hole/js/customdns.js"
+    ];
+
+    require "scripts/pi-hole/php/footer.php";
 ?>

@@ -160,9 +160,11 @@
 </div>
 <!-- /.row -->
 
-<script src="scripts/vendor/daterangepicker.min.js"></script>
-<script src="scripts/pi-hole/js/db_queries.js"></script>
-
 <?php
+    $extra_scripts = [
+        "scripts/vendor/daterangepicker.min.js",
+        "scripts/pi-hole/js/db_queries.js"
+    ];
+
     require "scripts/pi-hole/php/footer.php";
 ?>

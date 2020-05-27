@@ -200,14 +200,6 @@
     <link rel="stylesheet" href="style/pi-hole.css">
     <link rel="stylesheet" href="style/themes/<?php echo $theme; ?>.css">
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
-
-    <script src="scripts/vendor/jquery.min.js"></script>
-    <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="scripts/vendor/adminlte.min.js"></script>
-    <script src="scripts/vendor/bootstrap-notify.min.js"></script>
-    <script src="scripts/vendor/datatables.min.js"></script>
-    <script src="scripts/vendor/moment.min.js"></script>
-    <script src="scripts/vendor/Chart.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
 <noscript>

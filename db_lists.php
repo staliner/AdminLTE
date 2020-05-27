@@ -139,10 +139,12 @@ else
     <!-- /.col -->
 </div>
 
-<script src="scripts/vendor/daterangepicker.min.js"></script>
-<script src="scripts/pi-hole/js/utils.js"></script>
-<script src="scripts/pi-hole/js/db_lists.js"></script>
-
 <?php
+    $extra_scripts = [
+        "scripts/vendor/daterangepicker.min.js",
+        "scripts/pi-hole/js/utils.js",
+        "scripts/pi-hole/js/db_lists.js"
+    ];
+
     require "scripts/pi-hole/php/footer.php";
 ?>

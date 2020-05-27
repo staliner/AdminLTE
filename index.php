@@ -294,9 +294,11 @@ else
 <!-- /.row -->
 <?php } ?>
 
-<script src="scripts/pi-hole/js/utils.js"></script>
-<script src="scripts/pi-hole/js/index.js"></script>
-
 <?php
+    $extra_scripts = [
+        "scripts/pi-hole/js/utils.js",
+        "scripts/pi-hole/js/index.js"
+    ];
+
     require "scripts/pi-hole/php/footer.php";
 ?>
