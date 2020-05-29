@@ -130,9 +130,9 @@ $(function () {
     APIstring += "&querytype=" + GETDict.querytype;
   } else if ("forwarddest" in GETDict) {
     APIstring += "&forwarddest=" + GETDict.forwarddest;
-  }
-  // If we don't ask filtering and also not for all queries, just request the most recent 100 queries
-  else if (!("all" in GETDict)) {
+  // If we don't ask for filtering and also not for all queries,
+  // just request the most recent 100 queries
+  } else if (!("all" in GETDict)) {
     APIstring += "=100";
   }
 
@@ -162,12 +162,12 @@ $(function () {
       }
 
       // Query status
-      var blocked,
-        fieldtext,
-        buttontext,
-        colorClass,
-        isCNAME = false,
-        regexLink = false;
+      var blocked;
+      var fieldtext;
+      var buttontext;
+      var colorClass;
+      var isCNAME = false;
+      var regexLink = false;
 
       switch (data[4]) {
         case "1":

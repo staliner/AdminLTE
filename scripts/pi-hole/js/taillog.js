@@ -5,10 +5,10 @@
  *  This file is copyright under the latest version of the EUPL.
  *  Please see LICENSE file for your rights under this license. */
 
-var offset,
-  timer,
-  pre,
-  scrolling = true;
+var offset;
+var timer;
+var pre;
+var scrolling = true;
 
 // Check every 200msec for fresh data
 var interval = 200;

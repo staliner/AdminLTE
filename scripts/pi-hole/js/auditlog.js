@@ -21,7 +21,8 @@ function updateTopLists() {
     $("#ad-frequency td").parent().remove();
     var domaintable = $("#domain-frequency").find("tbody:last");
     var adtable = $("#ad-frequency").find("tbody:last");
-    var url, domain;
+    var url;
+    var domain;
     for (domain in data.top_queries) {
       if (Object.prototype.hasOwnProperty.call(data.top_queries, domain)) {
         // Sanitize domain

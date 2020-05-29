@@ -31,7 +31,9 @@ function showAlert(type, message) {
       return;
   }
 
-  if (messageElement !== null) messageElement.html(message);
+  if (messageElement !== null) {
+    messageElement.html(message);
+  }
 
   alertElement.fadeIn(200);
   alertElement.delay(8000).fadeOut(2000);
@@ -89,7 +91,9 @@ function addCustomDNS() {
       if (response.success) {
         showAlert("success");
         table.ajax.reload();
-      } else showAlert("error", response.message);
+      } else {
+        showAlert("error", response.message);
+      }
     },
     error: function () {
       showAlert("error", "Error while adding this custom DNS entry");
@@ -111,7 +115,9 @@ function deleteCustomDNS() {
       if (response.success) {
         showAlert("success");
         table.ajax.reload();
-      } else showAlert("error", response.message);
+      } else {
+        showAlert("error", response.message);
+      }
     },
     error: function (jqXHR, exception) {
       showAlert("error", "Error while deleting this custom DNS entry");

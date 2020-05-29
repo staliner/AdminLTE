@@ -307,7 +307,9 @@ function addDomain() {
   var type;
 
   // current tab's inputs
-  var domainRegex, domainEl, commentEl;
+  var domainRegex;
+  var domainEl;
+  var commentEl;
   if (tabHref === "#tab_domain") {
     domainRegex = "domain";
     domainEl = $("#new_domain");
@@ -461,13 +463,14 @@ function editDomain() {
           domain
         );
         table.ajax.reload(null, false);
-      } else
+      } else {
         utils.showAlert(
           "error",
           "",
           "Error while " + notDone + " " + domainRegex + " with ID " + id,
           response.message
         );
+      }
     },
     error: function (jqXHR, exception) {
       utils.enableAll();

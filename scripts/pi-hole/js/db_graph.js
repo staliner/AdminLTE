@@ -95,8 +95,8 @@ function updateQueriesOverTime() {
       timeLineChart.data.datasets[0].data = [];
       timeLineChart.data.datasets[1].data = [];
 
-      var dates = [],
-        hour;
+      var dates = [];
+      var hour;
 
       for (hour in data.domains_over_time[0]) {
         if (Object.prototype.hasOwnProperty.call(data.domains_over_time[0], hour)) {
@@ -117,9 +117,9 @@ function updateQueriesOverTime() {
       // Add data for each hour that is available
       for (hour in dates) {
         if (Object.prototype.hasOwnProperty.call(dates, hour)) {
-          var date,
-            total = 0,
-            blocked = 0;
+          var date;
+          var total = 0;
+          var blocked = 0;
           date = new Date(1000 * dates[hour]);
 
           var idx = data.domains_over_time[0].indexOf(dates[hour].toString());

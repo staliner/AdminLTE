@@ -107,7 +107,7 @@ function initTable() {
         '" class="breakall">' +
         data.ip +
         "</code>";
-      if (data.name !== null && data.name.length > 0)
+      if (data.name !== null && data.name.length > 0) {
         ipName +=
           '<br><code id="name_' +
           data.id +
@@ -116,6 +116,8 @@ function initTable() {
           '" class="breakall">' +
           data.name +
           "</code>";
+      }
+
       $("td:eq(0)", row).html(ipName);
 
       $("td:eq(1)", row).html('<input id="comment_' + data.id + '" class="form-control">');

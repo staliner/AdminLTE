@@ -16,8 +16,8 @@
   "homepage": "https://github.com/pi-hole/AdminLTE#readme",
   "scripts": {
     "prefix": "postcss \"style/*.css\" \"style/themes/*.css\" --use autoprefixer --no-map --replace",
-    "prettier:check": "prettier -l \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
-    "prettier:fix": "prettier --write \"style/*.css\" \"style/themes/*.css\" \"scripts/pi-hole/**/*.js\"",
+    "prettier:check": "prettier -l \"style/*.css\" \"style/themes/*.css\"",
+    "prettier:fix": "prettier --write \"style/*.css\" \"style/themes/*.css\"",
     "xo": "xo",
     "xo:fix": "npm run xo -- --fix",
     "test": "npm run prettier:check && npm run xo"
@@ -26,7 +26,7 @@
     "autoprefixer": "^9.8.0",
     "eslint-plugin-compat": "^3.7.0",
     "postcss-cli": "^7.1.1",
-    "prettier": "2.0.4",
+    "prettier": "^2.0.5",
     "xo": "^0.32.0"
   },
   "browserslist": [
@@ -56,7 +56,6 @@
       "sourceType": "script"
     },
     "esnext": false,
-    "prettier": true,
     "space": 2,
     "ignores": [
       "**/vendor/**"
@@ -77,8 +76,19 @@
       ],
       "no-alert": "off",
       "no-console": "error",
+      "no-mixed-operators": "off",
       "no-negated-condition": "off",
-      "one-var": "off",
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ],
+      "quotes": [
+        "error",
+        "double",
+        {
+          "avoidEscape": true
+        }
+      ],
       "spaced-comment": "off",
       "unicorn/explicit-length-check": [
         "error",

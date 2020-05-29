@@ -70,7 +70,8 @@ $(function () {
   );
 });
 
-var tableApi, statistics;
+var tableApi;
+var statistics;
 
 function add(domain, list) {
   var token = $("#token").text();
@@ -255,7 +256,9 @@ $(function () {
 
   tableApi = $("#all-queries").DataTable({
     rowCallback: function (row, data) {
-      var fieldtext, buttontext, color;
+      var fieldtext;
+      var buttontext;
+      var color;
       switch (data[4]) {
         case 1:
           color = "red";

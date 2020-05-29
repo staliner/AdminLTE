@@ -58,7 +58,9 @@ function updateTopClientsChart() {
     // Clear tables before filling them with data
     $("#client-frequency td").parent().remove();
     var clienttable = $("#client-frequency").find("tbody:last");
-    var client, percentage, clientname;
+    var client;
+    var percentage;
+    var clientname;
     var sum = 0;
     for (client in data.top_sources) {
       if (Object.prototype.hasOwnProperty.call(data.top_sources, client)) {
@@ -102,7 +104,9 @@ function updateTopClientsChart() {
     $("#client-frequency .overlay").hide();
 
     listsStillLoading--;
-    if (listsStillLoading === 0) timeoutWarning.hide();
+    if (listsStillLoading === 0) {
+      timeoutWarning.hide();
+    }
   });
 }
 
@@ -112,7 +116,8 @@ function updateTopDomainsChart() {
     // Clear tables before filling them with data
     $("#domain-frequency td").parent().remove();
     var domaintable = $("#domain-frequency").find("tbody:last");
-    var domain, percentage;
+    var domain;
+    var percentage;
     var sum = 0;
     for (domain in data.top_domains) {
       if (Object.prototype.hasOwnProperty.call(data.top_domains, domain)) {
@@ -149,7 +154,9 @@ function updateTopDomainsChart() {
     $("#domain-frequency .overlay").hide();
 
     listsStillLoading--;
-    if (listsStillLoading === 0) timeoutWarning.hide();
+    if (listsStillLoading === 0) {
+      timeoutWarning.hide();
+    }
   });
 }
 
@@ -159,7 +166,8 @@ function updateTopAdsChart() {
     // Clear tables before filling them with data
     $("#ad-frequency td").parent().remove();
     var adtable = $("#ad-frequency").find("tbody:last");
-    var ad, percentage;
+    var ad;
+    var percentage;
     var sum = 0;
     for (ad in data.top_ads) {
       if (Object.prototype.hasOwnProperty.call(data.top_ads, ad)) {
@@ -196,7 +204,9 @@ function updateTopAdsChart() {
     $("#ad-frequency .overlay").hide();
 
     listsStillLoading--;
-    if (listsStillLoading === 0) timeoutWarning.hide();
+    if (listsStillLoading === 0) {
+      timeoutWarning.hide();
+    }
   });
 }
 
