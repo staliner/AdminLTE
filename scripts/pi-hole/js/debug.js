@@ -22,7 +22,7 @@ function eventsource() {
       url: "scripts/pi-hole/php/debug.php?IE&token=" + token + "&" + checked,
       async: false
     }).done(function (data) {
-      ta.show();
+      ta.removeClass("d-none");
       ta.empty();
       ta.append(data);
     });
@@ -34,7 +34,7 @@ function eventsource() {
 
   // Reset and show field
   ta.empty();
-  ta.show();
+  ta.removeClass("d-none");
 
   source.addEventListener(
     "message",

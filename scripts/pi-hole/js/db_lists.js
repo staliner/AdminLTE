@@ -102,7 +102,7 @@ function updateTopClientsChart() {
     $("#client-frequency .overlay").hide();
 
     listsStillLoading--;
-    if (listsStillLoading === 0) timeoutWarning.hide();
+    if (listsStillLoading === 0) timeoutWarning.addClass("d-none");
   });
 }
 
@@ -149,7 +149,7 @@ function updateTopDomainsChart() {
     $("#domain-frequency .overlay").hide();
 
     listsStillLoading--;
-    if (listsStillLoading === 0) timeoutWarning.hide();
+    if (listsStillLoading === 0) timeoutWarning.addClass("d-none");
   });
 }
 
@@ -196,13 +196,13 @@ function updateTopAdsChart() {
     $("#ad-frequency .overlay").hide();
 
     listsStillLoading--;
-    if (listsStillLoading === 0) timeoutWarning.hide();
+    if (listsStillLoading === 0) timeoutWarning.addClass("d-none");
   });
 }
 
 $("#querytime").on("apply.daterangepicker", function (ev, picker) {
   $(this).val(picker.startDate.format(dateformat) + " to " + picker.endDate.format(dateformat));
-  timeoutWarning.show();
+  timeoutWarning.removeClass("d-none").addClass("show");
   listsStillLoading = 3;
   updateTopClientsChart();
   updateTopDomainsChart();

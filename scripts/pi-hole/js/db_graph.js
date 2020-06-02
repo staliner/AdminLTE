@@ -60,7 +60,7 @@ function updateQueriesOverTime() {
   var timeoutWarning = $("#timeoutWarning");
 
   $("#queries-over-time .overlay").show();
-  timeoutWarning.show();
+  timeoutWarning.removeClass("d-none").addClass("show");
 
   // Compute interval to obtain about 200 values
   var num = 200;
@@ -140,7 +140,7 @@ function updateQueriesOverTime() {
 
       timeLineChart.options.scales.xAxes[0].display = true;
       $("#queries-over-time .overlay").hide();
-      timeoutWarning.hide();
+      timeoutWarning.addClass("d-none").removeClass("show");
       timeLineChart.update();
     }
   );

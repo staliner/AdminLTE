@@ -12,8 +12,8 @@ function eventsource() {
 
   // IE does not support EventSource - exit early
   if (typeof EventSource !== "function") {
-    ta.show();
     ta.html("Updating lists of ad-serving domains is not supported with this browser!");
+    ta.removeClass("d-none");
     return;
   }
 
@@ -21,15 +21,15 @@ function eventsource() {
   var source = new EventSource("scripts/pi-hole/php/gravity.sh.php");
 
   ta.html("");
-  ta.show();
-  alInfo.show();
-  alSuccess.hide();
+  ta.removeClass("d-none");
+  alInfo.removeClass("d-none").addClass("show");
+  alSuccess.addClass("d-none").removeClass("show");
 
   source.addEventListener(
     "message",
     function (e) {
       if (e.data.indexOf("Pi-hole blocking is") !== -1) {
-        alSuccess.show();
+        alSuccess.removeClass("d-none");
       }
 
       // Detect ${OVER}
@@ -50,7 +50,7 @@ function eventsource() {
     "error",
     function () {
       alInfo.delay(1000).fadeOut(2000, function () {
-        alInfo.hide();
+        alInfo.addClass("d-none");
       });
       source.close();
       $("#gravityBtn").prop("disabled", false);

@@ -161,8 +161,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; child-src 'self'; form-action 'self'; frame-src 'self'; font-src 'self'; connect-src 'self'; img-src 'self'; manifest-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; child-src 'self'; form-action 'self'; frame-src 'self'; font-src 'self'; connect-src 'self'; img-src 'self' data:; manifest-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
     <!-- Usually browsers proactively perform domain name resolution on links that the user may choose to follow. We disable DNS prefetching here -->
     <meta http-equiv="x-dns-prefetch-control" content="off">
     <meta http-equiv="cache-control" content="max-age=60,private">
@@ -181,16 +180,16 @@
     <meta name="theme-color" content="#367fa9">
 
 <?php if ($darkmode) { ?>
+    <!-- TODO: is this still needed? -->
     <style>
         html { background-color: #000; }
     </style>
 <?php } ?>
     <link rel="stylesheet" href="style/vendor/SourceSansPro/SourceSansPro.css">
-    <link rel="stylesheet" href="style/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="style/vendor/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="style/vendor/adminlte.min.css">
     <link rel="stylesheet" href="style/vendor/datatables.min.css">
     <link rel="stylesheet" href="style/vendor/daterangepicker.min.css">
-    <link rel="stylesheet" href="style/vendor/AdminLTE.min.css">
 
 <?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?>
     <link rel="stylesheet" href="style/vendor/animate.min.css">
@@ -202,20 +201,23 @@
     <noscript><link rel="stylesheet" href="style/vendor/js-warn.css"></noscript>
 
     <script src="scripts/vendor/jquery.min.js"></script>
-    <script src="style/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="scripts/vendor/bootstrap.bundle.min.js"></script>
     <script src="scripts/vendor/adminlte.min.js"></script>
     <script src="scripts/vendor/bootstrap-notify.min.js"></script>
     <script src="scripts/vendor/datatables.min.js"></script>
     <script src="scripts/vendor/moment.min.js"></script>
     <script src="scripts/vendor/Chart.min.js"></script>
 </head>
-<body class="hold-transition sidebar-mini <?php if($boxedlayout){ ?>layout-boxed<?php } ?>">
+<body class="hold-transition sidebar-mini accent-lightblue<?php echo $boxedlayout ? " layout-boxed" : "" ?>">
 <noscript>
     <!-- JS Warning -->
     <div>
         <input type="checkbox" id="js-hide">
-        <div class="js-warn" id="js-warn-exit"><h1>JavaScript Is Disabled</h1><p>JavaScript is required for the site to function.</p>
-            <p>To learn how to enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p><label for="js-hide">Close</label>
+        <div class="js-warn" id="js-warn-exit">
+            <h2 class="h1">JavaScript Is Disabled</h2>
+            <p>JavaScript is required for the site to function.</p>
+            <p>To learn how to enable JavaScript click <a href="https://www.enable-javascript.com/" rel="noopener" target="_blank">here</a></p>
+            <label for="js-hide">Close</label>
         </div>
     </div>
     <!-- /JS Warning -->
@@ -229,430 +231,449 @@ if($auth) {
 <!-- Send token to JS -->
 <div id="enableTimer" hidden><?php if(file_exists("../custom_disable_timer")){ echo file_get_contents("../custom_disable_timer"); } ?></div>
 <div class="wrapper">
-    <header class="main-header">
-        <!-- Logo -->
-        <a href="index.php" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini">P<strong>h</strong></span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">Pi-<strong>hole</strong></span>
-        </a>
-        <!-- Header Navbar: style can be found in header.less -->
-        <nav class="navbar navbar-static-top">
-            <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle fa5" data-toggle="push-menu" role="button">
-                <span class="sr-only">Toggle navigation</span>
-            </a>
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <li id="pihole-diagnosis" class="hidden">
-                        <a href="messages.php">
-                            <i class="fa fa-exclamation-triangle"></i>
-                            <span class="label label-warning" id="pihole-diagnosis-count"></span>
-                        </a>
-                    </li>
-                    <li<?php echo !$hostname ? ' class="hidden"' : "" ?>>
-                        <p class="navbar-text">
-                            <span class="hidden-xs hidden-sm">hostname:</span>
-                            <code><?php echo $hostname; ?></code>
+    <nav class="main-header navbar navbar-expand navbar-dark navbar-lightblue">
+        <!-- Left nav -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="nav-link" data-widget="pushmenu" data-auto-collapse-size="992" role="button">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                    <span class="sr-only">Toggle sidebar</span>
+                </a>
+            </li>
+        </ul>
+        <!-- Right nav -->
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item navbar-text">
+                <span class="d-none d-md-inline-block">hostname:</span>
+                <code class="bg-white p-1"><?php echo gethostname(); ?></code>
+            </li>
+            <li class="nav-item d-none" id="pihole-diagnosis">
+                <a class="nav-link" href="messages.php">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span class="label label-warning" id="pihole-diagnosis-count"></span>
+                </a>
+            </li>
+            <li class="nav-item dropdown user-menu">
+                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+                    <img src="img/logo.svg" class="user-image border-0" alt="Pi-hole logo" width="25" height="25">
+                    <span class="d-none d-md-inline">Pi-hole</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    <!-- User image -->
+                    <li class="user-header text-white">
+                        <img src="img/logo.svg" class="border-0" alt="Pi-hole Logo" width="90" height="90">
+                        <p>
+                            Open Source Ad Blocker
+                            <small>Designed For Raspberry Pi</small>
                         </p>
                     </li>
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <img src="img/logo.svg" class="user-image" alt="Pi-hole logo" style="border-radius: 0" width="25" height="25">
-                            <span class="hidden-xs">Pi-hole</span>
+                    <!-- Menu Body -->
+                    <li class="user-body border-0">
+                        <div class="row no-gutters">
+                            <div class="col-4 text-center">
+                                <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank">GitHub</a>
+                            </div>
+                            <div class="col-4 text-center">
+                                <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">Website</a>
+                            </div>
+                            <div class="col-4 text-center">
+                                <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">Updates</a>
+                            </div>
+                            <div id="sessiontimer" class="col-12 mt-2 text-center font-weight-bold">
+                                Session is valid for <span id="sessiontimercounter"><?php echo $auth && strlen($pwhash) > 0 ? $maxlifetime : "0"; ?></span>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- Menu Footer -->
+                    <li class="user-footer text-center">
+                        <!-- PayPal -->
+                        <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
+                            <img src="img/donate.gif" alt="Donate" width="147" height="47">
                         </a>
-                        <ul class="dropdown-menu">
-                            <!-- User image -->
-                            <li class="user-header">
-                                <img src="img/logo.svg" alt="Pi-hole Logo" style="border: 0" width="90" height="90">
-                                <p>
-                                    Open Source Ad Blocker
-                                    <small>Designed For Raspberry Pi</small>
-                                </p>
-                            </li>
-                            <!-- Menu Body -->
-                            <li class="user-body">
-                                <div class="row">
-                                    <div class="col-xs-4 text-center">
-                                        <a class="btn-link" href="https://github.com/pi-hole" rel="noopener" target="_blank">GitHub</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a class="btn-link" href="https://pi-hole.net/" rel="noopener" target="_blank">Website</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a class="btn-link" href="https://github.com/pi-hole/pi-hole/releases" rel="noopener" target="_blank">Updates</a>
-                                    </div>
-                                    <div id="sessiontimer" class="col-xs-12 text-center">
-                                        <strong>Session is valid for <span id="sessiontimercounter"><?php if($auth && strlen($pwhash) > 0){echo $maxlifetime;}else{echo "0";} ?></span></strong>
-                                    </div>
-                                </div>
-                            </li>
-                            <!-- Menu Footer -->
-                            <li class="user-footer">
-                                <!-- PayPal -->
-                                <div class="text-center">
-                                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                                        <img src="img/donate.gif" alt="Donate" width="147" height="47">
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
                     </li>
                 </ul>
-            </div>
-        </nav>
-    </header>
-    <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-lightblue elevation-3">
+        <a class="brand-link navbar-lightblue" href="index.php">
+            <img src="img/logo.svg" alt="Pi-hole logo" class="brand-image" width="33" height="33">
+            <span class="brand-text font-weight-light">Pi-<strong>hole</strong></span>
+        </a>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
             <!-- Sidebar user panel -->
-            <div class="user-panel">
-                <div class="pull-left image">
-                    <img src="img/logo.svg" alt="Pi-hole logo" width="45" height="67" style="height: 67px;">
+            <div class="user-panel my-2 pb-2 d-flex text-xs">
+                <div class="image align-self-center">
+                    <img src="img/logo.svg" alt="Pi-hole logo" width="34" height="50">
                 </div>
-                <div class="pull-left info">
-                    <p>Status</p>
-                        <?php
+                <div class="info pl-3">
+                    <p class="mb-1 font-weight-bold">Status</p>
+
+                    <ul class="list-unstyled mb-0">
+                    <?php
                         $pistatus = pihole_execute('status web');
                         if (isset($pistatus[0])) {
                             $pistatus = $pistatus[0];
                         } else {
                             $pistatus = null;
                         }
+
+                        echo '<li id="status">';
                         if ($pistatus === "1") {
-                            echo '<span id="status"><i class="fa fa-circle text-green-light"></i> Active</span>';
+                            echo '<i class="fas fa-circle text-green-light mr-1"></i> Active';
                         } elseif ($pistatus === "0") {
-                            echo '<span id="status"><i class="fa fa-circle text-red"></i> Offline</span>';
+                            echo '<i class="fas fa-circle text-red mr-1"></i> Offline';
                         } elseif ($pistatus === "-1") {
-                            echo '<span id="status"><i class="fa fa-circle text-red"></i> DNS service not running</span>';
+                            echo '<i class="fas fa-circle text-red mr-1"></i> DNS service not running';
                         } else {
-                            echo '<span id="status"><i class="fa fa-circle text-orange"></i> Unknown</span>';
+                            echo '<i class="fas fa-circle text-orange mr-1"></i> Unknown';
                         }
 
                         // CPU Temp
-                        if($FTL)
-                        {
+                        if ($FTL) {
                             if ($celsius >= -273.15) {
-                                echo "<span id=\"temperature\"><i class=\"fa fa-fire ";
+                                echo '<span id="temperature" class="ml-2"><i class="fas fa-fire mr-1 ';
                                 if ($celsius > $temperaturelimit) {
                                     echo "text-red";
-                                }
-                                else
-                                {
+                                } else {
                                     echo "text-vivid-blue";
                                 }
-                                ?>"\"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius;?></span><span id="tempdisplay"></span><?php
+                                ?>
+                                "\"></i> Temp:&nbsp;<span id="rawtemp" hidden><?php echo $celsius; ?></span><span id="tempdisplay"></span>
+                                <?php
                             }
+                                } else {
+                            echo '<span id="temperature" class="ml-2"><i class="fas fa-circle text-red mr-1"></i> FTL offline</span>';
                         }
-                        else
-                        {
-                            echo '<span id=\"temperature\"><i class="fa fa-circle text-red"></i> FTL offline</span>';
-                        }
-                    ?>
-                    <br/>
-                    <?php
-                    echo "<span title=\"Detected $nproc cores\"><i class=\"fa fa-circle ";
+                        echo '</li><li><span title="Detected ' . $nproc . ' cores"><i class="fas fa-circle mr-1 ';
                         if ($loaddata[0] > $nproc) {
                             echo "text-red";
-                        }
-                        else
-                        {
+                        } else {
                             echo "text-green-light";
                         }
-                        echo "\"></i> Load:&nbsp;&nbsp;" . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</span>";
-                    ?>
-                    <br/>
-                    <?php
-                    echo "<span><i class=\"fa fa-circle ";
+                        echo '"></i> Load:&nbsp;&nbsp;' . $loaddata[0] . "&nbsp;&nbsp;" . $loaddata[1] . "&nbsp;&nbsp;". $loaddata[2] . "</li>";
+
+                        echo '<li><i class="fas fa-circle mr-1 ';
                         if ($memory_usage > 0.75 || $memory_usage < 0.0) {
                             echo "text-red";
-                        }
-                        else
-                        {
+                        } else {
                             echo "text-green-light";
                         }
-                        if($memory_usage > 0.0)
-                        {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp;" . sprintf("%.1f",100.0*$memory_usage) . "&thinsp;%</span>";
-                        }
-                        else
-                        {
-                            echo "\"></i> Memory usage:&nbsp;&nbsp; N/A</span>";
+                        if ($memory_usage > 0.0) {
+                            echo '"></i> Memory usage:&nbsp;&nbsp;' . sprintf("%.1f", 100.0 * $memory_usage) . "&thinsp;%</li>";
+                        } else {
+                            echo '"></i> Memory usage:&nbsp;&nbsp; N/A</li>';
                         }
                     ?>
+                    </ul>
                 </div>
             </div>
-            <!-- sidebar menu: : style can be found in sidebar.less -->
+
             <?php
-            if($scriptname === "groups-domains.php" && isset($_GET['type']))
-            {
-                if($_GET["type"] === "white")
-                {
+            if ($scriptname === "groups-domains.php" && isset($_GET['type'])) {
+                if ($_GET["type"] === "white") {
                     $scriptname = "whitelist";
-                }
-                elseif($_GET["type"] === "black")
-                {
+                } elseif ($_GET["type"] === "black") {
                     $scriptname = "blacklist";
                 }
             }
-            if(!$auth && (!isset($indexpage) || isset($_GET['login'])))
-            {
+            if (!$auth && (!isset($indexpage) || isset($_GET['login']))) {
                 $scriptname = "login";
             }
             ?>
-            <ul class="sidebar-menu" data-widget="tree">
-                <li class="header text-uppercase">Main navigation</li>
-                <!-- Home Page -->
-                <li<?php if($scriptname === "index.php"){ ?> class="active"<?php } ?>>
-                    <a href="index.php">
-                        <i class="fa fa-home"></i> <span>Dashboard</span>
-                    </a>
-                </li>
-                <?php if($auth){ ?>
-                <!-- Query Log -->
-                <li<?php if($scriptname === "queries.php"){ ?> class="active"<?php } ?>>
-                    <a href="queries.php">
-                        <i class="fa fa-file-alt"></i> <span>Query Log</span>
-                    </a>
-                </li>
-                <li class="treeview<?php if($scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php"){ ?> active<?php } ?>">
-                  <a href="#">
-                    <i class="fa fa-clock"></i> <span>Long-term data</span>
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                  </a>
-                  <ul class="treeview-menu">
-                    <li<?php if($scriptname === "db_graph.php"){ ?> class="active"<?php } ?>>
-                        <a href="db_graph.php">
-                            <i class="fa fa-file-alt"></i> Graphics
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-flat" data-widget="treeview" data-accordion="false" role="menu">
+                    <!-- Home Page -->
+                    <li class="nav-item">
+                        <a class="nav-link<?php echo $scriptname === "index.php" ? " active" : "" ?>" href="index.php">
+                            <i class="nav-icon fas fa-home"></i>
+                            <p>Dashboard</p>
                         </a>
                     </li>
-                    <li<?php if($scriptname === "db_queries.php"){ ?> class="active"<?php } ?>>
-                        <a href="db_queries.php">
-                            <i class="fa fa-file-alt"></i> Query Log
+                    <?php if ($auth) { ?>
+                    <!-- Query Log -->
+                    <li class="nav-item">
+                        <a class="nav-link<?php echo $scriptname === "queries.php" ? " active" : "" ?>" href="queries.php">
+                            <i class="nav-icon fas fa-file-alt"></i>
+                            <p>Query Log</p>
                         </a>
                     </li>
-                    <li<?php if($scriptname === "db_lists.php"){ ?> class="active"<?php } ?>>
-                        <a href="db_lists.php">
-                            <i class="fa fa-file-alt"></i> Top Lists
+                    <li class="nav-item has-treeview<?php echo $scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php" ? " menu-open" : "" ?>">
+                        <a class="nav-link<?php echo $scriptname === "db_queries.php" || $scriptname === "db_lists.php" || $scriptname === "db_graph.php" ? " active" : "" ?>" href="#">
+                            <i class="nav-icon fas fa-clock"></i>
+                            <p>
+                                Long-term data
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "db_graph.php" ? " active" : "" ?>" href="db_graph.php">
+                                    <i class="nav-icon fas fa-file-alt"></i>
+                                    <p>Graphics</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "db_queries.php" ? " active" : "" ?>" href="db_queries.php">
+                                    <i class="nav-icon fas fa-file-alt"></i>
+                                    <p>Query Log</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "db_lists.php" ? " active" : "" ?>" href="db_lists.php">
+                                    <i class="nav-icon fas fa-file-alt"></i>
+                                    <p>Top Lists</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Whitelist -->
+                    <li class="nav-item">
+                        <a class="nav-link<?php echo $scriptname === "whitelist" ? " active" : "" ?>" href="groups-domains.php?type=white">
+                            <i class="nav-icon fas fa-check-circle"></i>
+                            <p>Whitelist</p>
                         </a>
                     </li>
-                  </ul>
-                </li>
-                <!-- Whitelist -->
-                <li<?php if($scriptname === "whitelist"){ ?> class="active"<?php } ?>>
-                    <a href="groups-domains.php?type=white">
-                        <i class="fa fa-check-circle "></i> <span>Whitelist</span>
-                    </a>
-                </li>
-                <!-- Blacklist -->
-                <li<?php if($scriptname === "blacklist"){ ?> class="active"<?php } ?>>
-                    <a href="groups-domains.php?type=black">
-                        <i class="fa fa-ban"></i> <span>Blacklist</span>
-                    </a>
-                </li>
-                <!-- Local DNS Records -->
-                <li<?php if($scriptname === "dns_records.php"){ ?> class="active"<?php } ?>>
-                    <a href="dns_records.php">
-                        <i class="fa fa-address-book"></i> <span>Local DNS Records</span>
-                    </a>
-                </li>
-                <!-- Group Management -->
-                <li class="treeview<?php if (in_array($scriptname, array("groups.php", "groups-adlists.php", "groups-clients.php", "groups-domains.php"))){ ?> active<?php } ?>">
-                  <a href="#">
-                    <i class="fa fa-users-cog"></i> <span>Group Management</span>
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                  </a>
-                  <ul class="treeview-menu">
-                    <li<?php if($scriptname === "groups.php"){ ?> class="active"<?php } ?>>
-                        <a href="groups.php">
-                            <i class="fa fa-user-friends"></i> Groups
+                    <!-- Blacklist -->
+                    <li class="nav-item">
+                        <a class="nav-link<?php echo $scriptname === "blacklist" ? " active" : "" ?>" href="groups-domains.php?type=black">
+                            <i class="nav-icon fas fa-ban"></i>
+                            <p>Blacklist</p>
                         </a>
                     </li>
-                    <li<?php if($scriptname === "groups-clients.php"){ ?> class="active"<?php } ?>>
-                        <a href="groups-clients.php">
-                            <i class="fa fa-laptop"></i> Clients
+                    <!-- Local DNS Records -->
+                    <li class="nav-item">
+                        <a class="nav-link<?php echo $scriptname === "dns_records.php" ? " active" : "" ?>" href="dns_records.php">
+                            <i class="nav-icon fas fa-address-book"></i>
+                            <p>Local DNS Records</p>
                         </a>
                     </li>
-                    <li<?php if($scriptname === "groups-domains.php"){ ?> class="active"<?php } ?>>
-                        <a href="groups-domains.php">
-                            <i class="fa fa-list"></i> Domains
+                    <!-- Group Management -->
+                    <li class="nav-item has-treeview<?php echo in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php")) ? " menu-open" : "" ?>">
+                        <a class="nav-link<?php echo in_array($scriptname, array("groups.php", "groups-clients.php", "groups-domains.php", "groups-adlists.php")) ? " active" : "" ?>" href="#">
+                            <i class="nav-icon fas fa-users-cog"></i>
+                            <p>
+                                Group Management
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "groups.php" ? " active" : "" ?>" href="groups.php">
+                                    <i class="nav-icon fas fa-user-friends"></i>
+                                    <p>Groups</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "groups-clients.php" ? " active" : "" ?>" href="groups-clients.php">
+                                    <i class="nav-icon fas fa-laptop"></i>
+                                    <p>Clients</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "groups-domains.php" ? " active" : "" ?>" href="groups-domains.php">
+                                    <i class="nav-icon fas fa-list"></i>
+                                    <p>Domains</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "groups-adlists.php" ? " active" : "" ?>" href="groups-adlists.php">
+                                    <i class="nav-icon fas fa-shield-alt"></i>
+                                    <p>Adlists</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Toggle -->
+                    <li class="nav-item has-treeview<?php echo ($pistatus == "0") ? " d-none" : "" ?>" id="pihole-disable">
+                        <a class="nav-link" href="#">
+                            <i class="nav-icon fas fa-stop"></i>
+                            <p>
+                                Disable&nbsp;&nbsp;&nbsp;
+                                <i class="fas fa-angle-left right"></i>
+                                <span id="flip-status-disable"></span>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="pihole-disable-indefinitely">
+                                    <i class="nav-icon fas fa-stop"></i>
+                                    <p>Indefinitely</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="pihole-disable-10s">
+                                    <i class="nav-icon fas fa-clock"></i>
+                                    <p>For 10 seconds</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="pihole-disable-30s">
+                                    <i class="nav-icon fas fa-clock"></i>
+                                    <p>For 30 seconds</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="pihole-disable-5m">
+                                    <i class="nav-icon fas fas fa-clock"></i>
+                                    <p>For 5 minutes</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
+                                    <i class="nav-icon fas fa-clock"></i>
+                                    <p>Custom time</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item<?php echo ($pistatus == "1") ? " d-none" : "" ?>" id="pihole-enable">
+                        <a class="nav-link" href="#">
+                            <i class="nav-icon fas fa-play"></i>
+                            <span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;
+                                <span id="flip-status-enable"></span>
+                            </span>
                         </a>
                     </li>
-                    <li<?php if($scriptname === "groups-adlists.php"){ ?> class="active"<?php } ?>>
-                        <a href="groups-adlists.php">
-                            <i class="fa fa-shield-alt"></i> Adlists
+                    <!-- Tools -->
+                    <li class="nav-item has-treeview<?php echo in_array($scriptname, array("messages.php", "gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php", "network.php")) ? " menu-open" : "" ?>">
+                        <a class="nav-link<?php echo in_array($scriptname, array("messages.php", "gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php", "network.php")) ? " active" : "" ?>" href="#">
+                          <i class="nav-icon fas fa-folder"></i>
+                          <p>
+                              Tools
+                              <i class="fas fa-angle-left right"></i>
+                          </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <!-- Pi-hole diagnosis -->
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "messages.php" ? " active" : "" ?>" href="messages.php">
+                                    <i class="nav-icon fas fa-stethoscope"></i>
+                                    <p>Pi-hole diagnosis</p>
+                                </a>
+                            </li>
+                            <!-- Run gravity.sh -->
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "gravity.php" ? " active" : "" ?>" href="gravity.php">
+                                    <i class="nav-icon fas fa-arrow-circle-down"></i>
+                                    <p>Update Gravity</p>
+                                </a>
+                            </li>
+                            <!-- Query Lists -->
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "queryads.php" ? " active" : "" ?>" href="queryads.php">
+                                    <i class="nav-icon fas fa-search"></i>
+                                    <p>Query Lists</p>
+                                </a>
+                            </li>
+                            <!-- Audit log -->
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "auditlog.php" ? " active" : "" ?>" href="auditlog.php">
+                                    <i class="nav-icon fas fa-balance-scale"></i>
+                                    <p>Audit log</p>
+                                </a>
+                            </li>
+                            <!-- Tail pihole.log -->
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "taillog.php" ? " active" : "" ?>" href="taillog.php">
+                                    <i class="nav-icon fas fa-list-ul"></i>
+                                    <p>Tail pihole.log</p>
+                                </a>
+                            </li>
+                            <!-- Tail pihole-FTL.log -->
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "taillog-FTL.php" ? " active" : "" ?>" href="taillog-FTL.php">
+                                    <i class="nav-icon fas fa-list-ul"></i>
+                                    <p>Tail pihole-FTL.log</p>
+                                </a>
+                            </li>
+                            <!-- Generate debug log -->
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "debug.php" ? " active" : "" ?>" href="debug.php">
+                                    <i class="nav-icon fas fa-ambulance"></i>
+                                    <p>Generate debug log</p>
+                                </a>
+                            </li>
+                            <!-- Network -->
+                            <li class="nav-item">
+                                <a class="nav-link<?php echo $scriptname === "network.php" ? " active" : "" ?>" href="network.php">
+                                    <i class="nav-icon fas fa-network-wired"></i>
+                                    <p>Network</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Settings -->
+                    <li class="nav-item">
+                        <a class="nav-link<?php echo $scriptname === "settings.php" ? " active" : "" ?>" href="settings.php">
+                            <i class="nav-icon fas fa-cogs"></i>
+                            <p>Settings</p>
                         </a>
                     </li>
-                  </ul>
-                </li>
-                <!-- Toggle -->
-                <li id="pihole-disable" class="treeview"<?php if ($pistatus == "0") { ?> hidden<?php } ?>>
-                  <a href="#">
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                    <i class="fa fa-stop"></i> <span>Disable&nbsp;&nbsp;&nbsp;<span id="flip-status-disable"></span></span>
-                  </a>
-                  <ul class="treeview-menu">
-                    <li>
-                        <a href="#" id="pihole-disable-indefinitely">
-                            <i class="fa fa-stop"></i> Indefinitely
+                    <!-- Logout -->
+                    <?php
+                    // Show Logout button if $auth is set and authorization is required
+                    if (strlen($pwhash) > 0) { ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="?logout">
+                            <i class="nav-icon fas fa-user-times"></i>
+                            <p>Logout</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="#" id="pihole-disable-10s">
-                            <i class="fa fa-clock"></i> For 10 seconds
+                    <?php } ?>
+                    <?php } ?>
+                    <!-- Login -->
+                    <?php
+                    // Show Login button if $auth is *not* set and authorization is required
+                    if (strlen($pwhash) > 0 && !$auth) { ?>
+                    <li class="nav-item">
+                        <a class="nav-link<?php echo $scriptname === "login" ? " active" : "" ?>" href="index.php?login">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>Login</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="#" id="pihole-disable-30s">
-                            <i class="fa fa-clock"></i> For 30 seconds
+                    <?php } ?>
+                    <!-- Donate -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
+                            <i class="nav-icon fab fa-paypal"></i>
+                            <p>Donate</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="#" id="pihole-disable-5m">
-                            <i class="fa fas fa-clock"></i> For 5 minutes
+                    <!-- Docs -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://docs.pi-hole.net/" rel="noopener" target="_blank">
+                            <i class="nav-icon fas fa-question-circle"></i>
+                            <p>Documentation</p>
                         </a>
                     </li>
-                    <li>
-                      <a href="#" id="pihole-disable-cst" data-toggle="modal" data-target="#customDisableModal">
-                            <i class="fa fa-clock"></i> <span>Custom time</span>
-                      </a>
-                    </li>
-                  </ul>
-                    <!-- <a href="#" id="flip-status"><i class="fa fa-stop"></i> <span>Disable</span></a> -->
-                </li>
-                <li id="pihole-enable" class="treeview"<?php if ($pistatus == "1") { ?> hidden<?php } ?>>
-                    <a href="#">
-                      <i class="fa fa-play"></i>
-                      <span id="enableLabel">Enable&nbsp;&nbsp;&nbsp;
-                        <span id="flip-status-enable"></span>
-                      </span>
-                    </a>
-                </li>
-                <!-- Tools -->
-                <li class="treeview<?php if (in_array($scriptname, array("messages.php", "gravity.php", "queryads.php", "auditlog.php", "taillog.php", "taillog-FTL.php", "debug.php", "network.php"))){ ?> active<?php } ?>">
-                  <a href="#">
-                    <i class="fa fa-folder"></i> <span>Tools</span>
-                    <span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                  </a>
-                  <ul class="treeview-menu">
-                    <!-- Pi-hole diagnosis -->
-                    <li<?php if($scriptname === "messages.php"){ ?> class="active"<?php } ?>>
-                        <a href="messages.php">
-                            <i class="fa fa-stethoscope"></i> Pi-hole diagnosis
-                        </a>
-                    </li>
-                    <!-- Run gravity.sh -->
-                    <li<?php if($scriptname === "gravity.php"){ ?> class="active"<?php } ?>>
-                        <a href="gravity.php">
-                            <i class="fa fa-arrow-circle-down"></i> Update Gravity
-                        </a>
-                    </li>
-                    <!-- Query Lists -->
-                    <li<?php if($scriptname === "queryads.php"){ ?> class="active"<?php } ?>>
-                        <a href="queryads.php">
-                            <i class="fa fa-search"></i> Query Lists
-                        </a>
-                    </li>
-                    <!-- Audit log -->
-                    <li<?php if($scriptname === "auditlog.php"){ ?> class="active"<?php } ?>>
-                        <a href="auditlog.php">
-                            <i class="fa fa-balance-scale"></i> Audit log
-                        </a>
-                    </li>
-                    <!-- Tail pihole.log -->
-                    <li<?php if($scriptname === "taillog.php"){ ?> class="active"<?php } ?>>
-                        <a href="taillog.php">
-                            <i class="fa fa-list-ul"></i> Tail pihole.log
-                        </a>
-                    </li>
-                    <!-- Tail pihole-FTL.log -->
-                    <li<?php if($scriptname === "taillog-FTL.php"){ ?> class="active"<?php } ?>>
-                        <a href="taillog-FTL.php">
-                            <i class="fa fa-list-ul"></i> Tail pihole-FTL.log
-                        </a>
-                    </li>
-                    <!-- Generate debug log -->
-                    <li<?php if($scriptname === "debug.php"){ ?> class="active"<?php } ?>>
-                        <a href="debug.php">
-                            <i class="fa fa-ambulance"></i> Generate debug log
-                        </a>
-                    </li>
-                    <!-- Network -->
-                    <li<?php if($scriptname === "network.php"){ ?> class="active"<?php } ?>>
-                        <a href="network.php">
-                            <i class="fa fa-network-wired"></i> Network
-                        </a>
-                    </li>
-                  </ul>
-                </li>
-                <!-- Settings -->
-                <li<?php if($scriptname === "settings.php"){ ?> class="active"<?php } ?>>
-                    <a href="settings.php">
-                        <i class="fa fa-cogs"></i> <span>Settings</span>
-                    </a>
-                </li>
-                <!-- Logout -->
-                <?php
-                // Show Logout button if $auth is set and authorization is required
-                if(strlen($pwhash) > 0) { ?>
-                <li>
-                    <a href="?logout">
-                        <i class="fa fa-user-times"></i> <span>Logout</span>
-                    </a>
-                </li>
-                <?php } ?>
-                <?php } ?>
-                <!-- Login -->
-                <?php
-                // Show Login button if $auth is *not* set and authorization is required
-                if(strlen($pwhash) > 0 && !$auth) { ?>
-                <li<?php if($scriptname === "login"){ ?> class="active"<?php } ?>>
-                    <a href="index.php?login">
-                        <i class="fa fa-user"></i> <span>Login</span>
-                    </a>
-                </li>
-                <?php } ?>
-                <!-- Donate -->
-                <li>
-                    <a href="https://pi-hole.net/donate/" rel="noopener" target="_blank">
-                        <i class="fab fa-paypal"></i> <span>Donate</span>
-                    </a>
-                </li>
-                 <!-- Docs -->
-                 <li>
-                    <a href="https://docs.pi-hole.net/" rel="noopener" target="_blank">
-                        <i class="fa fa-question-circle"></i> <span>Documentation</span>
-                    </a>
-                </li>
-            </ul>
-        </section>
+                </ul>
+            </nav>
+        </div>
         <!-- /.sidebar -->
     </aside>
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Main content -->
         <section class="content">
+            <div class="container-fluid">
+
 <?php
-    // If password is not equal to the password set
-    // in the setupVars.conf file, then we skip any
-    // content and just complete the page. If no
-    // password is set at all, we keep the current
-    // behavior: everything is always authorized
-    // and will be displayed
+    // If password is not equal to the password set in the setupVars.conf file,
+    // then we skip any content and just complete the page.
+    // If no password is set at all, we keep the current behavior:
+    // everything is always authorized and will be displayed.
     //
     // If auth is required and not set, i.e. no successfully logged in,
     // we show the reduced version of the summary (index) page
-    if(!$auth && (!isset($indexpage) || isset($_GET['login']))){
+    if (!$auth && (!isset($indexpage) || isset($_GET['login']))) {
         require "scripts/pi-hole/php/loginpage.php";
         require "footer.php";
         exit();

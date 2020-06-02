@@ -95,7 +95,7 @@ function initTable() {
           data.id +
           '" title="' +
           tooltip +
-          '" class="breakall">' +
+          '" class="text-break">' +
           data.domain +
           "</code>"
       );
@@ -288,14 +288,14 @@ function initTable() {
   table.on("order.dt", function () {
     var order = table.order();
     if (order[0][0] !== 0 || order[0][1] !== "asc") {
-      $("#resetButton").removeClass("hidden");
+      $("#resetButton").removeClass("d-none");
     } else {
-      $("#resetButton").addClass("hidden");
+      $("#resetButton").addClass("d-none");
     }
   });
   $("#resetButton").on("click", function () {
     table.order([[0, "asc"]]).draw();
-    $("#resetButton").addClass("hidden");
+    $("#resetButton").addClass("d-none");
   });
 }
 

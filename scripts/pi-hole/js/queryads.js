@@ -59,7 +59,7 @@ function eventsource() {
 
   // Reset and show field
   ta.empty();
-  ta.show();
+  ta.removeClass("d-none");
 
   source.addEventListener(
     "message",
