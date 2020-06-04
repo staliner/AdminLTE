@@ -1,12 +1,11 @@
 <?php /*
-*    Pi-hole: A black hole for Internet advertisements
-*    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
-*
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. */
-    require "scripts/pi-hole/php/header.php";
-?>
+ *    Pi-hole: A black hole for Internet advertisements
+ *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+ *    Network-wide ad blocking via your own hardware.
+ *
+ *    This file is copyright under the latest version of the EUPL.
+ *    Please see LICENSE file for your rights under this license. */
+require "scripts/pi-hole/php/header.php"; ?>
 
 <!-- Sourceing CSS colors from stylesheet to be used in JS code -->
 <span class="queries-permitted"></span>
@@ -45,16 +44,11 @@
     Depending on how large of a range you specified, the request may time out while Pi-hole tries to retrieve all the data.<br/><span id="err"></span>
 </div>
 
-<?php
-if($boxedlayout)
-{
-	$tablelayout = "col-md-6";
-}
-else
-{
-	$tablelayout = "col-md-6 col-lg-4";
-}
-?>
+<?php if ($boxedlayout) {
+    $tablelayout = "col-md-6";
+} else {
+    $tablelayout = "col-md-6 col-lg-4";
+} ?>
 <div class="row">
     <div class="<?php echo $tablelayout; ?>">
       <div class="box" id="domain-frequency">
@@ -143,6 +137,5 @@ else
 <script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/db_lists.js"></script>
 
-<?php
-    require "scripts/pi-hole/php/footer.php";
+<?php require "scripts/pi-hole/php/footer.php";
 ?>

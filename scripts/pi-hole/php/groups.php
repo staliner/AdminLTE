@@ -1,12 +1,12 @@
 <?php
 /* Pi-hole: A black hole for Internet advertisements
-*  (c) 2019 Pi-hole, LLC (https://pi-hole.net)
-*  Network-wide ad blocking via your own hardware.
-*
-*  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */
+ *  (c) 2019 Pi-hole, LLC (https://pi-hole.net)
+ *  Network-wide ad blocking via your own hardware.
+ *
+ *  This file is copyright under the latest version of the EUPL.
+ *  Please see LICENSE file for your rights under this license. */
 
-require_once('auth.php');
+require_once 'auth.php';
 
 // Authentication checks
 if (!isset($api)) {
@@ -20,8 +20,8 @@ if (!isset($api)) {
 
 $reload = false;
 
-require_once('func.php');
-require_once('database.php');
+require_once 'func.php';
+require_once 'database.php';
 $GRAVITYDB = getGravityDBFilename();
 $db = SQLite3_connect($GRAVITYDB, SQLITE3_OPEN_READWRITE);
 
@@ -77,13 +77,29 @@ if ($_POST['action'] == 'get_groups') {
 
         foreach ($names as $name) {
             if (!$stmt->bindValue(':name', $name, SQLITE3_TEXT)) {
-                throw new Exception('While binding name: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
-                'Added ' . $added . " out of ". $total . " groups");
+                throw new Exception(
+                    'While binding name: <strong>' .
+                        $db->lastErrorMsg() .
+                        '</strong><br>' .
+                        'Added ' .
+                        $added .
+                        " out of " .
+                        $total .
+                        " groups"
+                );
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
-                'Added ' . $added . " out of ". $total . " groups");
+                throw new Exception(
+                    'While executing: <strong>' .
+                        $db->lastErrorMsg() .
+                        '</strong><br>' .
+                        'Added ' .
+                        $added .
+                        " out of " .
+                        $total .
+                        " groups"
+                );
             }
             $added++;
         }
@@ -135,8 +151,8 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'delete_group') {
     // Delete group identified by ID
     try {
-        $table_name = ['domainlist_by_group', 'client_by_group', 'adlist_by_group', 'group'];
-        $table_keys = ['group_id', 'group_id', 'group_id', 'id'];
+        $table_name = array('domainlist_by_group', 'client_by_group', 'adlist_by_group', 'group');
+        $table_keys = array('group_id', 'group_id', 'group_id', 'id');
         for ($i = 0; $i < count($table_name); $i++) {
             $table = $table_name[$i];
             $key = $table_keys[$i];
@@ -218,7 +234,9 @@ if ($_POST['action'] == 'get_groups') {
         $QUERYDB = getQueriesDBFilename();
         $FTLdb = SQLite3_connect($QUERYDB);
 
-        $query = $FTLdb->query('SELECT DISTINCT ip,network.name FROM network_addresses AS name LEFT JOIN network ON network.id = network_id ORDER BY ip ASC;');
+        $query = $FTLdb->query(
+            'SELECT DISTINCT ip,network.name FROM network_addresses AS name LEFT JOIN network ON network.id = network_id ORDER BY ip ASC;'
+        );
         if (!$query) {
             throw new Exception('Error while querying FTL\'s database: ' . $db->lastErrorMsg());
         }
@@ -265,17 +283,33 @@ if ($_POST['action'] == 'get_groups') {
 
             $comment = $_POST['comment'];
             if (strlen($comment) === 0) {
-                    // Store NULL in database for empty comments
-                    $comment = null;
+                // Store NULL in database for empty comments
+                $comment = null;
             }
             if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
-                throw new Exception('While binding comment: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
-                'Added ' . $added . " out of ". $total . " clients");
+                throw new Exception(
+                    'While binding comment: <strong>' .
+                        $db->lastErrorMsg() .
+                        '</strong><br>' .
+                        'Added ' .
+                        $added .
+                        " out of " .
+                        $total .
+                        " clients"
+                );
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
-                'Added ' . $added . " out of ". $total . " clients");
+                throw new Exception(
+                    'While executing: <strong>' .
+                        $db->lastErrorMsg() .
+                        '</strong><br>' .
+                        'Added ' .
+                        $added .
+                        " out of " .
+                        $total .
+                        " clients"
+                );
             }
             $added++;
         }
@@ -295,8 +329,8 @@ if ($_POST['action'] == 'get_groups') {
 
         $comment = $_POST['comment'];
         if (strlen($comment) === 0) {
-                // Store NULL in database for empty comments
-                $comment = null;
+            // Store NULL in database for empty comments
+            $comment = null;
         }
         if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
@@ -387,14 +421,14 @@ if ($_POST['action'] == 'get_groups') {
     // List all available groups
     try {
         $limit = "";
-        if (isset($_POST["showtype"]) && $_POST["showtype"] === "white"){
+        if (isset($_POST["showtype"]) && $_POST["showtype"] === "white") {
             $limit = " WHERE type = 0 OR type = 2";
-        } elseif (isset($_POST["showtype"]) && $_POST["showtype"] === "black"){
+        } elseif (isset($_POST["showtype"]) && $_POST["showtype"] === "black") {
             $limit = " WHERE type = 1 OR type = 3";
-        } elseif (isset($_POST["type"]) && is_numeric($_POST["type"])){
+        } elseif (isset($_POST["type"]) && is_numeric($_POST["type"])) {
             $limit = " WHERE type = " . $_POST["type"];
         }
-        $query = $db->query('SELECT * FROM domainlist'.$limit);
+        $query = $db->query('SELECT * FROM domainlist' . $limit);
         if (!$query) {
             throw new Exception('Error while querying gravity\'s domainlist table: ' . $db->lastErrorMsg());
         }
@@ -411,10 +445,7 @@ if ($_POST['action'] == 'get_groups') {
                 array_push($groups, $gres['group_id']);
             }
             $res['groups'] = $groups;
-            if (extension_loaded("intl") &&
-                ($res['type'] === ListType::whitelist ||
-                 $res['type'] === ListType::blacklist) ) {
-
+            if (extension_loaded("intl") && ($res['type'] === ListType::whitelist || $res['type'] === ListType::blacklist)) {
                 // Try to convert possible IDNA domain to Unicode, we try the UTS #46 standard first
                 // as this is the new default, see https://sourceforge.net/p/icu/mailman/message/32980778/
                 // We know that this fails for some Google domains violating the standard
@@ -439,7 +470,7 @@ if ($_POST['action'] == 'get_groups') {
                 // Convert domain name to international form
                 // if applicable and extension is available
                 if ($utf8_domain !== false && $res['domain'] !== $utf8_domain) {
-                    $res['domain'] = $utf8_domain.' ('.$res['domain'].')';
+                    $res['domain'] = $utf8_domain . ' (' . $res['domain'] . ')';
                 }
             }
             array_push($data, $res);
@@ -464,9 +495,9 @@ if ($_POST['action'] == 'get_groups') {
 
         if (isset($_POST['type'])) {
             $type = intval($_POST['type']);
-        } else if (isset($_POST['list']) && $_POST['list'] === "white") {
+        } elseif (isset($_POST['list']) && $_POST['list'] === "white") {
             $type = ListType::whitelist;
-        } else if (isset($_POST['list']) && $_POST['list'] === "black") {
+        } elseif (isset($_POST['list']) && $_POST['list'] === "black") {
             $type = ListType::blacklist;
         }
 
@@ -496,59 +527,78 @@ if ($_POST['action'] == 'get_groups') {
                 if ($idn_domain === false && defined("INTL_IDNA_VARIANT_2003")) {
                     $idn_domain = idn_to_ascii($domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_2003);
                 }
-                if($idn_domain !== false) {
+                if ($idn_domain !== false) {
                     $domain = $idn_domain;
                 }
             }
 
-            if(strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W')
-            {
+            if (strlen($_POST['type']) === 2 && $_POST['type'][1] === 'W') {
                 // Apply wildcard-style formatting
-                $domain = "(\\.|^)".str_replace(".","\\.",$domain)."$";
+                $domain = "(\\.|^)" . str_replace(".", "\\.", $domain) . "$";
             }
 
-            if($type === ListType::whitelist || $type === ListType::blacklist)
-            {
+            if ($type === ListType::whitelist || $type === ListType::blacklist) {
                 // If adding to the exact lists, we convert the domain lower case and check whether it is valid
                 $domain = strtolower($domain);
-                if(filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)
-                {
+                if (filter_var($domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false) {
                     // This is the case when idn_to_ascii() modified the string
-                    if($input !== $domain && strlen($domain) > 0)
-                        $errormsg = 'Domain ' . htmlentities($input) . ' (converted to "' . htmlentities(utf8_encode($domain)) . '") is not a valid domain.';
-                    elseif($input !== $domain)
+                    if ($input !== $domain && strlen($domain) > 0) {
+                        $errormsg =
+                            'Domain ' .
+                            htmlentities($input) .
+                            ' (converted to "' .
+                            htmlentities(utf8_encode($domain)) .
+                            '") is not a valid domain.';
+                    } elseif ($input !== $domain) {
                         $errormsg = 'Domain ' . htmlentities($input) . ' is not a valid domain.';
-                    else
+                    } else {
                         $errormsg = 'Domain ' . htmlentities(utf8_encode($domain)) . ' is not a valid domain.';
-                    throw new Exception($errormsg . '<br>Added ' . $added . " out of ". $total . " domains");
+                    }
+                    throw new Exception($errormsg . '<br>Added ' . $added . " out of " . $total . " domains");
                 }
             }
 
             if (!$stmt->bindValue(':domain', $domain, SQLITE3_TEXT)) {
-                throw new Exception('While binding domain: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
-                'Added ' . $added . " out of ". $total . " domains");
+                throw new Exception(
+                    'While binding domain: <strong>' .
+                        $db->lastErrorMsg() .
+                        '</strong><br>' .
+                        'Added ' .
+                        $added .
+                        " out of " .
+                        $total .
+                        " domains"
+                );
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
-                'Added ' . $added . " out of ". $total . " domains");
+                throw new Exception(
+                    'While executing: <strong>' .
+                        $db->lastErrorMsg() .
+                        '</strong><br>' .
+                        'Added ' .
+                        $added .
+                        " out of " .
+                        $total .
+                        " domains"
+                );
             }
             $added++;
         }
 
         $after = intval($db->querySingle("SELECT COUNT(*) FROM domainlist;"));
         $difference = $after - $before;
-        if($total === 1) {
-            if($difference !== 1) {
-                    $msg = "Not adding ". htmlentities(utf8_encode($domain)) . " as it is already on the list";
+        if ($total === 1) {
+            if ($difference !== 1) {
+                $msg = "Not adding " . htmlentities(utf8_encode($domain)) . " as it is already on the list";
             } else {
-                    $msg = "Added " . htmlentities(utf8_encode($domain));
+                $msg = "Added " . htmlentities(utf8_encode($domain));
             }
         } else {
-            if($difference !== $total) {
-                    $msg = "Added " . ($after-$before) . " out of ". $total . " domains (skipped duplicates)";
+            if ($difference !== $total) {
+                $msg = "Added " . ($after - $before) . " out of " . $total . " domains (skipped duplicates)";
             } else {
-                    $msg = "Added " . $total . " domains";
+                $msg = "Added " . $total . " domains";
             }
         }
         $reload = true;
@@ -566,7 +616,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $status = intval($_POST['status']);
         if ($status !== 0) {
-                $status = 1;
+            $status = 1;
         }
 
         if (!$stmt->bindValue(':enabled', $status, SQLITE3_INTEGER)) {
@@ -575,8 +625,8 @@ if ($_POST['action'] == 'get_groups') {
 
         $comment = $_POST['comment'];
         if (strlen($comment) === 0) {
-                // Store NULL in database for empty comments
-                $comment = null;
+            // Store NULL in database for empty comments
+            $comment = null;
         }
         if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());
@@ -669,10 +719,12 @@ if ($_POST['action'] == 'get_groups') {
     } catch (\Exception $ex) {
         JSON_error($ex->getMessage());
     }
-}  elseif ($_POST['action'] == 'delete_domain_string') {
+} elseif ($_POST['action'] == 'delete_domain_string') {
     // Delete domain identified by the domain string itself
     try {
-        $stmt = $db->prepare('DELETE FROM domainlist_by_group WHERE domainlist_id=(SELECT id FROM domainlist WHERE domain=:domain AND type=:type);');
+        $stmt = $db->prepare(
+            'DELETE FROM domainlist_by_group WHERE domainlist_id=(SELECT id FROM domainlist WHERE domain=:domain AND type=:type);'
+        );
         if (!$stmt) {
             throw new Exception('While preparing domainlist_by_group statement: ' . $db->lastErrorMsg());
         }
@@ -761,19 +813,43 @@ if ($_POST['action'] == 'get_groups') {
         }
 
         foreach ($addresses as $address) {
-            if(preg_match("/[^a-zA-Z0-9:\/?&%=~._()-;]/", $address) !== 0) {
-                throw new Exception('<strong>Invalid adlist URL ' . htmlentities($address) . '</strong><br>'.
-                'Added ' . $added . " out of ". $total . " adlists");
+            if (preg_match("/[^a-zA-Z0-9:\/?&%=~._()-;]/", $address) !== 0) {
+                throw new Exception(
+                    '<strong>Invalid adlist URL ' .
+                        htmlentities($address) .
+                        '</strong><br>' .
+                        'Added ' .
+                        $added .
+                        " out of " .
+                        $total .
+                        " adlists"
+                );
             }
 
             if (!$stmt->bindValue(':address', $address, SQLITE3_TEXT)) {
-                throw new Exception('While binding address: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
-                'Added ' . $added . " out of ". $total . " adlists");
+                throw new Exception(
+                    'While binding address: <strong>' .
+                        $db->lastErrorMsg() .
+                        '</strong><br>' .
+                        'Added ' .
+                        $added .
+                        " out of " .
+                        $total .
+                        " adlists"
+                );
             }
 
             if (!$stmt->execute()) {
-                throw new Exception('While executing: <strong>' . $db->lastErrorMsg() . '</strong><br>'.
-                'Added ' . $added . " out of ". $total . " adlists");
+                throw new Exception(
+                    'While executing: <strong>' .
+                        $db->lastErrorMsg() .
+                        '</strong><br>' .
+                        'Added ' .
+                        $added .
+                        " out of " .
+                        $total .
+                        " adlists"
+                );
             }
             $added++;
         }
@@ -793,7 +869,7 @@ if ($_POST['action'] == 'get_groups') {
 
         $status = intval($_POST['status']);
         if ($status !== 0) {
-                $status = 1;
+            $status = 1;
         }
 
         if (!$stmt->bindValue(':enabled', $status, SQLITE3_INTEGER)) {
@@ -802,8 +878,8 @@ if ($_POST['action'] == 'get_groups') {
 
         $comment = $_POST['comment'];
         if (strlen($comment) === 0) {
-                // Store NULL in database for empty comments
-                $comment = null;
+            // Store NULL in database for empty comments
+            $comment = null;
         }
         if (!$stmt->bindValue(':comment', $comment, SQLITE3_TEXT)) {
             throw new Exception('While binding comment: ' . $db->lastErrorMsg());

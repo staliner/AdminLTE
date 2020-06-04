@@ -1,77 +1,56 @@
 <?php /*
-*    Pi-hole: A black hole for Internet advertisements
-*    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
-*
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. */
-    require "scripts/pi-hole/php/header.php";
+ *    Pi-hole: A black hole for Internet advertisements
+ *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+ *    Network-wide ad blocking via your own hardware.
+ *
+ *    This file is copyright under the latest version of the EUPL.
+ *    Please see LICENSE file for your rights under this license. */
+require "scripts/pi-hole/php/header.php";
 
 $showing = "";
 
-if(isset($setupVars["API_QUERY_LOG_SHOW"]))
-{
-	if($setupVars["API_QUERY_LOG_SHOW"] === "all")
-	{
-		$showing = "showing";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly")
-	{
-		$showing = "showing permitted";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly")
-	{
-		$showing = "showing blocked";
-	}
-	elseif($setupVars["API_QUERY_LOG_SHOW"] === "nothing")
-	{
-		$showing = "showing no queries (due to setting)";
-	}
-}
-else
-{
-	// If filter variable is not set, we
-	// automatically show all queries
-	$showing = "showing";
+if (isset($setupVars["API_QUERY_LOG_SHOW"])) {
+    if ($setupVars["API_QUERY_LOG_SHOW"] === "all") {
+        $showing = "showing";
+    } elseif ($setupVars["API_QUERY_LOG_SHOW"] === "permittedonly") {
+        $showing = "showing permitted";
+    } elseif ($setupVars["API_QUERY_LOG_SHOW"] === "blockedonly") {
+        $showing = "showing blocked";
+    } elseif ($setupVars["API_QUERY_LOG_SHOW"] === "nothing") {
+        $showing = "showing no queries (due to setting)";
+    }
+} else {
+    // If filter variable is not set, we
+    // automatically show all queries
+    $showing = "showing";
 }
 
 $showall = false;
-if(isset($_GET["all"]))
-{
-	$showing .= " all queries within the Pi-hole log";
-}
-else if(isset($_GET["client"]))
-{
-	$showing .= " queries for client ".htmlentities($_GET["client"]);
-}
-else if(isset($_GET["domain"]))
-{
-	$showing .= " queries for domain ".htmlentities($_GET["domain"]);
-}
-else if(isset($_GET["from"]) || isset($_GET["until"]))
-{
-	$showing .= " queries within specified time interval";
-}
-else
-{
-	$showing .= " up to 100 queries";
-	$showall = true;
+if (isset($_GET["all"])) {
+    $showing .= " all queries within the Pi-hole log";
+} elseif (isset($_GET["client"])) {
+    $showing .= " queries for client " . htmlentities($_GET["client"]);
+} elseif (isset($_GET["domain"])) {
+    $showing .= " queries for domain " . htmlentities($_GET["domain"]);
+} elseif (isset($_GET["from"]) || isset($_GET["until"])) {
+    $showing .= " queries within specified time interval";
+} else {
+    $showing .= " up to 100 queries";
+    $showall = true;
 }
 
-if(isset($setupVars["API_PRIVACY_MODE"]))
-{
-	if($setupVars["API_PRIVACY_MODE"])
-	{
-		// Overwrite string from above
-		$showing .= ", privacy mode enabled";
-	}
+if (isset($setupVars["API_PRIVACY_MODE"])) {
+    if ($setupVars["API_PRIVACY_MODE"]) {
+        // Overwrite string from above
+        $showing .= ", privacy mode enabled";
+    }
 }
 
-if(strlen($showing) > 0)
-{
-	$showing = "(".$showing.")";
-	if($showall)
-		$showing .= ", <a href=\"?all\">show all</a>";
+if (strlen($showing) > 0) {
+    $showing = "(" . $showing . ")";
+    if ($showall) {
+        $showing .= ", <a href=\"?all\">show all</a>";
+    }
 }
 ?>
 
@@ -154,6 +133,5 @@ if(strlen($showing) > 0)
 <script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/queries.js"></script>
 
-<?php
-    require "scripts/pi-hole/php/footer.php";
+<?php require "scripts/pi-hole/php/footer.php";
 ?>

@@ -4,7 +4,8 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  This file is copyright under the latest version of the EUPL.
-*  Please see LICENSE file for your rights under this license. */ ?>
+*  Please see LICENSE file for your rights under this license. */
+?>
 
 <div class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2" style="float:none">
   <div class="panel panel-default">
@@ -16,7 +17,9 @@
 
       <div class="panel-title text-center"><span class="logo-lg" style="font-size: 25px;">Pi-<b>hole</b></span></div>
       <p class="login-box-msg">Sign in to start your session</p>
-      <div id="cookieInfo" class="panel-title text-center text-red" style="font-size: 150%" hidden>Verify that cookies are allowed for <code><?php echo $_SERVER['HTTP_HOST']; ?></code></div>
+      <div id="cookieInfo" class="panel-title text-center text-red" style="font-size: 150%" hidden>Verify that cookies are allowed for <code><?php echo $_SERVER[
+          'HTTP_HOST'
+      ]; ?></code></div>
       <?php if ($wrongpassword) { ?>
         <div class="form-group has-error login-box-msg">
           <label class="control-label"><i class="fa fa-times-circle"></i> Wrong password!</label>
@@ -50,8 +53,10 @@
         <br>
         <div class="row">
           <div class="col-xs-12">
-            <div class="box box-<?php if (!$wrongpassword) { ?>info<?php } else { ?>danger<?php }
-            if (!$wrongpassword) { ?> collapsed-box<?php } ?> box-solid">
+            <div class="box box-<?php
+            if (!$wrongpassword) { ?>info<?php } else { ?>danger<?php }
+            if (!$wrongpassword) { ?> collapsed-box<?php }
+            ?> box-solid">
               <div class="box-header with-border">
                 <h3 class="box-title">Forgot password</h3>
 

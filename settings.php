@@ -1,10 +1,10 @@
 <?php /*
-*    Pi-hole: A black hole for Internet advertisements
-*    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
-*
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. */
+ *    Pi-hole: A black hole for Internet advertisements
+ *    (c) 2017 Pi-hole, LLC (https://pi-hole.net)
+ *    Network-wide ad blocking via your own hardware.
+ *
+ *    This file is copyright under the latest version of the EUPL.
+ *    Please see LICENSE file for your rights under this license. */
 require "scripts/pi-hole/php/header.php";
 require "scripts/pi-hole/php/savesettings.php";
 require_once "scripts/pi-hole/php/FTL.php";
@@ -14,11 +14,17 @@ $piholeFTLConf = piholeFTLConfig();
 
 // Handling of PHP internal errors
 $last_error = error_get_last();
-if($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR)
-{
-	$error .= "There was a problem applying your settings.<br>Debugging information:<br>PHP error (".htmlspecialchars($last_error["type"])."): ".htmlspecialchars($last_error["message"])." in ".htmlspecialchars($last_error["file"]).":".htmlspecialchars($last_error["line"]);
+if ($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR) {
+    $error .=
+        "There was a problem applying your settings.<br>Debugging information:<br>PHP error (" .
+        htmlspecialchars($last_error["type"]) .
+        "): " .
+        htmlspecialchars($last_error["message"]) .
+        " in " .
+        htmlspecialchars($last_error["file"]) .
+        ":" .
+        htmlspecialchars($last_error["line"]);
 }
-
 ?>
 <style>
 	.tooltip-inner {
@@ -28,8 +34,9 @@ if($last_error["type"] === E_WARNING || $last_error["type"] === E_ERROR)
 </style>
 
 <?php // Check if ad lists should be updated after saving ...
-if (isset($_POST["submit"])) {
-    if ($_POST["submit"] == "saveupdate") {
+// Check if ad lists should be updated after saving ...
+?>if (isset($_POST["submit"])) {
+    if ($_POST["submit"] == "saveupdate") {<?php
         // If that is the case -> refresh to the gravity page and start updating immediately
         ?>
         <meta http-equiv="refresh" content="1;url=gravity.php?go">
@@ -84,9 +91,9 @@ if (isset($setupVars["IPV6_ADDRESS"])) {
         // Convert HEX string to number
         $hex = hexdec($hexstr);
         // Global Unicast Address (2000::/3, RFC 4291)
-        $GUA = (($hex & 0x70) === 0x20);
+        $GUA = ($hex & 0x70) === 0x20;
         // Unique Local Address   (fc00::/7, RFC 4193)
-        $ULA = (($hex & 0xfe) === 0xfc);
+        $ULA = ($hex & 0xfe) === 0xfc;
         if ($GUA || $ULA) {
             // Scope global address detected
             $IPv6connectivity = true;
@@ -100,8 +107,8 @@ $hostname = trim(file_get_contents("/etc/hostname"), "\x00..\x1F");
 
 <?php
 // DNS settings
-$DNSservers = [];
-$DNSactive = [];
+$DNSservers = array();
+$DNSactive = array();
 
 $i = 1;
 while (isset($setupVars["PIHOLE_DNS_" . $i])) {
@@ -164,7 +171,7 @@ if (isset($setupVars["DNSMASQ_LISTENING"])) {
 } else {
     $DNSinterface = "single";
 }
-if (isset($setupVars["CONDITIONAL_FORWARDING"]) && ($setupVars["CONDITIONAL_FORWARDING"] == 1)) {
+if (isset($setupVars["CONDITIONAL_FORWARDING"]) && $setupVars["CONDITIONAL_FORWARDING"] == 1) {
     $conditionalForwarding = true;
     $conditionalForwardingDomain = $setupVars["CONDITIONAL_FORWARDING_DOMAIN"];
     $conditionalForwardingIP = $setupVars["CONDITIONAL_FORWARDING_IP"];
@@ -173,8 +180,7 @@ if (isset($setupVars["CONDITIONAL_FORWARDING"]) && ($setupVars["CONDITIONAL_FORW
 }
 ?>
 
-<?php
-// Query logging
+<?php // Query logging
 if (isset($setupVars["QUERY_LOGGING"])) {
     if ($setupVars["QUERY_LOGGING"] == 1) {
         $piHoleLogging = true;
@@ -183,22 +189,21 @@ if (isset($setupVars["QUERY_LOGGING"])) {
     }
 } else {
     $piHoleLogging = true;
-}
-?>
+} ?>
 
 <?php
 // Excluded domains in API Query Log call
 if (isset($setupVars["API_EXCLUDE_DOMAINS"])) {
     $excludedDomains = explode(",", $setupVars["API_EXCLUDE_DOMAINS"]);
 } else {
-    $excludedDomains = [];
+    $excludedDomains = array();
 }
 
 // Exluded clients in API Query Log call
 if (isset($setupVars["API_EXCLUDE_CLIENTS"])) {
     $excludedClients = explode(",", $setupVars["API_EXCLUDE_CLIENTS"]);
 } else {
-    $excludedClients = [];
+    $excludedClients = array();
 }
 
 // Exluded clients
@@ -214,45 +219,59 @@ if (isset($setupVars["API_PRIVACY_MODE"])) {
 } else {
     $privacyMode = false;
 }
-
 ?>
 
-<?php
-if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "dns", "piholedhcp", "api", "privacy", "teleporter"))) {
+<?php if (
+    isset($_GET['tab']) &&
+    in_array($_GET['tab'], array("sysadmin", "adlists", "dns", "piholedhcp", "api", "privacy", "teleporter"))
+) {
     $tab = $_GET['tab'];
 } else {
     $tab = "sysadmin";
-}
-?>
+} ?>
 <div class="row">
     <div class="col-md-12">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation"<?php if($tab === "sysadmin"){ ?> class="active"<?php } ?>>
-                    <a href="#sysadmin" aria-controls="sysadmin" aria-expanded="<?php echo $tab === "sysadmin" ? "true" : "false"; ?>" role="tab" data-toggle="tab">System</a>
+                <li role="presentation"<?php if ($tab === "sysadmin") { ?> class="active"<?php } ?>>
+                    <a href="#sysadmin" aria-controls="sysadmin" aria-expanded="<?php echo $tab === "sysadmin"
+                        ? "true"
+                        : "false"; ?>" role="tab" data-toggle="tab">System</a>
                 </li>
-                <li role="presentation"<?php if($tab === "adlists"){ ?> class="active"<?php } ?>>
-                    <a href="#adlists" aria-controls="adlists" aria-expanded="<?php echo $tab === "adlists" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Adlists</a>
+                <li role="presentation"<?php if ($tab === "adlists") { ?> class="active"<?php } ?>>
+                    <a href="#adlists" aria-controls="adlists" aria-expanded="<?php echo $tab === "adlists"
+                        ? "true"
+                        : "false"; ?>" role="tab" data-toggle="tab">Adlists</a>
                 </li>
-                <li role="presentation"<?php if($tab === "dns"){ ?> class="active"<?php } ?>>
-                    <a href="#dns" aria-controls="dns" aria-expanded="<?php echo $tab === "dns" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DNS</a>
+                <li role="presentation"<?php if ($tab === "dns") { ?> class="active"<?php } ?>>
+                    <a href="#dns" aria-controls="dns" aria-expanded="<?php echo $tab === "dns"
+                        ? "true"
+                        : "false"; ?>" role="tab" data-toggle="tab">DNS</a>
                 </li>
-                <li role="presentation"<?php if($tab === "piholedhcp"){ ?> class="active"<?php } ?>>
-                    <a href="#piholedhcp" aria-controls="piholedhcp" aria-expanded="<?php echo $tab === "piholedhcp" ? "true" : "false"; ?>" role="tab" data-toggle="tab">DHCP</a>
+                <li role="presentation"<?php if ($tab === "piholedhcp") { ?> class="active"<?php } ?>>
+                    <a href="#piholedhcp" aria-controls="piholedhcp" aria-expanded="<?php echo $tab === "piholedhcp"
+                        ? "true"
+                        : "false"; ?>" role="tab" data-toggle="tab">DHCP</a>
                 </li>
-                <li role="presentation"<?php if($tab === "api"){ ?> class="active"<?php } ?>>
-                    <a href="#api" aria-controls="api" aria-expanded="<?php echo $tab === "api" ? "true" : "false"; ?>" role="tab" data-toggle="tab">API / Web interface</a>
+                <li role="presentation"<?php if ($tab === "api") { ?> class="active"<?php } ?>>
+                    <a href="#api" aria-controls="api" aria-expanded="<?php echo $tab === "api"
+                        ? "true"
+                        : "false"; ?>" role="tab" data-toggle="tab">API / Web interface</a>
                 </li>
-                <li role="presentation"<?php if($tab === "privacy"){ ?> class="active"<?php } ?>>
-                    <a href="#privacy" aria-controls="privacy" aria-expanded="<?php echo $tab === "privacy" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Privacy</a>
+                <li role="presentation"<?php if ($tab === "privacy") { ?> class="active"<?php } ?>>
+                    <a href="#privacy" aria-controls="privacy" aria-expanded="<?php echo $tab === "privacy"
+                        ? "true"
+                        : "false"; ?>" role="tab" data-toggle="tab">Privacy</a>
                 </li>
-                <li role="presentation"<?php if($tab === "teleporter"){ ?> class="active"<?php } ?>>
-                    <a href="#teleporter" aria-controls="teleporter" aria-expanded="<?php echo $tab === "teleporter" ? "true" : "false"; ?>" role="tab" data-toggle="tab">Teleporter</a>
+                <li role="presentation"<?php if ($tab === "teleporter") { ?> class="active"<?php } ?>>
+                    <a href="#teleporter" aria-controls="teleporter" aria-expanded="<?php echo $tab === "teleporter"
+                        ? "true"
+                        : "false"; ?>" role="tab" data-toggle="tab">Teleporter</a>
                 </li>
             </ul>
             <div class="tab-content">
                 <!-- ######################################################### System admin ######################################################### -->
-                <div id="sysadmin" class="tab-pane fade<?php if($tab === "sysadmin"){ ?> in active<?php } ?>">
+                <div id="sysadmin" class="tab-pane fade<?php if ($tab === "sysadmin") { ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="box">
@@ -295,8 +314,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                 <div class="box-body">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <?php
-                                            if ($FTL) {
+                                            <?php if ($FTL) {
+
                                                 function get_FTL_data($arg)
                                                 {
                                                     global $FTLpid;
@@ -304,7 +323,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 }
 
                                                 $FTLversion = exec("/usr/bin/pihole-FTL version");
-                                            ?>
+                                                ?>
                                             <table class="table table-striped table-bordered nowrap">
                                                 <tbody>
                                                     <tr>
@@ -321,7 +340,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">User / Group:</th>
-                                                        <td><?php print_r(get_FTL_data("euser")); ?> / <?php print_r(get_FTL_data("egroup")); ?></td>
+                                                        <td><?php print_r(get_FTL_data("euser")); ?> / <?php print_r(
+     get_FTL_data("egroup")
+ ); ?></td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">Total CPU utilization:</th>
@@ -358,9 +379,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 </tbody>
                                             </table>
                                             See also our <a href="https://docs.pi-hole.net/ftldns/dns-cache/" rel="noopener" target="_blank">DNS cache documentation</a>.
-                                            <?php } else { ?>
+                                            <?php
+                                            } else {
+                                                 ?>
                                             <div>The FTL service is offline!</div>
-                                            <?php } ?>
+                                            <?php
+                                            } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -379,7 +403,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <form role="form" method="post">
                                                     <input type="hidden" name="action" value="Enable">
                                                     <input type="hidden" name="field" value="Logging">
-                                                    <input type="hidden" name="token" value="<?php echo $token ?>">
+                                                    <input type="hidden" name="token" value="<?php echo $token; ?>">
                                                     <button type="submit" class="btn btn-success btn-block">Enable query logging</button>
                                                 </form>
                                             <?php } ?>
@@ -410,28 +434,28 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
 
                                     <form role="form" method="post" id="flushlogsform">
                                         <input type="hidden" name="field" value="flushlogs">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                     <form role="form" method="post" id="flusharpform">
                                         <input type="hidden" name="field" value="flusharp">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                     <form role="form" method="post" id="disablelogsform-noflush">
                                         <input type="hidden" name="field" value="Logging">
                                         <input type="hidden" name="action" value="Disable-noflush">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                     <form role="form" method="post" id="poweroffform">
                                         <input type="hidden" name="field" value="poweroff">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                     <form role="form" method="post" id="rebootform">
                                         <input type="hidden" name="field" value="reboot">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                     <form role="form" method="post" id="restartdnsform">
                                         <input type="hidden" name="field" value="restartdns">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                     </form>
                                 </div>
                             </div>
@@ -439,7 +463,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                     </div>
                 </div>
                 <!-- ######################################################### Adlists ######################################################### -->
-                <div id="adlists" class="tab-pane fade<?php if($tab === "adlists"){ ?> in active<?php } ?>">
+                <div id="adlists" class="tab-pane fade<?php if ($tab === "adlists") { ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="box">
@@ -454,7 +478,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                     </div>
                 </div>
                 <!-- ######################################################### DHCP ######################################################### -->
-                <div id="piholedhcp" class="tab-pane fade<?php if($tab === "piholedhcp"){ ?> in active<?php } ?>">
+                <div id="piholedhcp" class="tab-pane fade<?php if ($tab === "piholedhcp") { ?> in active<?php } ?>">
                     <?php
                     // Pi-hole DHCP server
                     if (isset($setupVars["DHCP_ACTIVE"])) {
@@ -500,7 +524,6 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                         } else {
                             $DHCP_rapid_commit = false;
                         }
-
                     } else {
                         $DHCP = false;
                         // Try to guess initial settings
@@ -535,8 +558,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div><input type="checkbox" name="active" id="DHCPchk" <?php if ($DHCP){ ?>checked<?php } ?>><label for="DHCPchk"><strong>DHCP server enabled</strong></label></div><br>
-                                                <p id="dhcpnotice" <?php if (!$DHCP){ ?>hidden<?php } ?>>Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
+                                                <div><input type="checkbox" name="active" id="DHCPchk" <?php if (
+                                                    $DHCP
+                                                ) { ?>checked<?php } ?>><label for="DHCPchk"><strong>DHCP server enabled</strong></label></div><br>
+                                                <p id="dhcpnotice" <?php if (
+                                                    !$DHCP
+                                                ) { ?>hidden<?php } ?>>Make sure your router's DHCP server is disabled when using the Pi-hole DHCP server!</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -549,7 +576,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                         <div class="input-group-addon">From</div>
                                                         <input type="text" class="form-control DHCPgroup" name="from" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                value="<?php echo $DHCPstart; ?>"
-                                                               <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                               <?php if (!$DHCP) { ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -559,7 +586,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                         <div class="input-group-addon">To</div>
                                                         <input type="text" class="form-control DHCPgroup" name="to" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                value="<?php echo $DHCPend; ?>"
-                                                               <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                               <?php if (!$DHCP) { ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -572,7 +599,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                         <div class="input-group-addon">Router</div>
                                                         <input type="text" class="form-control DHCPgroup" name="router" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                                value="<?php echo $DHCProuter; ?>"
-                                                               <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                               <?php if (!$DHCP) { ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -595,7 +622,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                         <div class="input-group-addon">Domain</div>
                                                         <input type="text" class="form-control DHCPgroup" name="domain"
                                                                value="<?php echo $piHoleDomain; ?>"
-                                                               <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                               <?php if (!$DHCP) { ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -609,7 +636,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                         <input type="number" class="form-control DHCPgroup"
                                                                name="leasetime"
                                                                id="leasetime" value="<?php echo $DHCPleasetime; ?>"
-                                                               data-mask <?php if (!$DHCP){ ?>disabled<?php } ?>>
+                                                               data-mask <?php if (!$DHCP) { ?>disabled<?php } ?>>
                                                     </div>
                                                 </div>
                                                 <p>Hint: 0 = infinite, 24 = one day, 168 = one week, 744 = one month, 8760 = one year</p>
@@ -617,8 +644,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div><input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup" <?php if ($DHCPIPv6){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="useIPv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
-                                                <div><input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup" <?php if ($DHCP_rapid_commit){ ?>checked<?php }; if (!$DHCP){ ?> disabled<?php } ?>>&nbsp;<label for="DHCP_rapid_commit"><strong>Enable DHCP rapid commit (fast address assignment)</strong></label></div>
+                                                <div><input type="checkbox" name="useIPv6" id="useIPv6" class="DHCPgroup" <?php
+                                                if ($DHCPIPv6) { ?>checked<?php }
+                                                if (!$DHCP) { ?> disabled<?php }
+                                                ?>>&nbsp;<label for="useIPv6"><strong>Enable IPv6 support (SLAAC + RA)</strong></label></div>
+                                                <div><input type="checkbox" name="DHCP_rapid_commit" id="DHCP_rapid_commit" class="DHCPgroup" <?php
+                                                if ($DHCP_rapid_commit) { ?>checked<?php }
+                                                if (!$DHCP) { ?> disabled<?php }
+                                                ?>>&nbsp;<label for="DHCP_rapid_commit"><strong>Enable DHCP rapid commit (fast address assignment)</strong></label></div>
                                             </div>
                                         </div>
                                     </div>
@@ -634,8 +667,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                 // Read leases file
                                 $leasesfile = true;
                                 $dhcpleases = @fopen('/etc/pihole/dhcp.leases', 'r');
-                                if (!is_resource($dhcpleases))
+                                if (!is_resource($dhcpleases)) {
                                     $leasesfile = false;
+                                }
 
                                 function convertseconds($argument)
                                 {
@@ -643,11 +677,17 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     if ($seconds < 60) {
                                         return sprintf('%ds', $seconds);
                                     } elseif ($seconds < 3600) {
-                                        return sprintf('%dm %ds', ($seconds / 60), ($seconds % 60));
+                                        return sprintf('%dm %ds', $seconds / 60, $seconds % 60);
                                     } elseif ($seconds < 86400) {
-                                        return sprintf('%dh %dm %ds', ($seconds / 3600 % 24), ($seconds / 60 % 60), ($seconds % 60));
+                                        return sprintf('%dh %dm %ds', ($seconds / 3600) % 24, ($seconds / 60) % 60, $seconds % 60);
                                     } else {
-                                        return sprintf('%dd %dh %dm %ds', ($seconds / 86400), ($seconds / 3600 % 24), ($seconds / 60 % 60), ($seconds % 60));
+                                        return sprintf(
+                                            '%dd %dh %dm %ds',
+                                            $seconds / 86400,
+                                            ($seconds / 3600) % 24,
+                                            ($seconds / 60) % 60,
+                                            $seconds % 60
+                                        );
                                     }
                                 }
 
@@ -657,11 +697,12 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         $counter = intval($line[0]);
                                         if ($counter == 0) {
                                             $time = "Infinite";
-                                        } elseif ($counter <= 315360000) // 10 years in seconds
-                                        {
+                                        } elseif ($counter <= 315360000) {
+                                            // 10 years in seconds
                                             $time = convertseconds($counter);
-                                        } else // Assume time stamp
-                                        {
+                                        }
+                                        // Assume time stamp
+                                        else {
                                             $time = convertseconds($counter - time());
                                         }
 
@@ -683,7 +724,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                             $clid = "<i>unknown</i>";
                                         }
 
-                                        array_push($dhcp_leases, ["TIME" => $time, "hwaddr" => strtoupper($line[1]), "IP" => $line[2], "host" => $host, "clid" => $clid, "type" => $type]);
+                                        array_push($dhcp_leases, array(
+                                            "TIME" => $time,
+                                            "hwaddr" => strtoupper($line[1]),
+                                            "IP" => $line[2],
+                                            "host" => $host,
+                                            "clid" => $clid,
+                                            "type" => $type
+                                        ));
                                     }
                                 }
                             }
@@ -711,9 +759,15 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     <tbody>
                                                         <?php foreach ($dhcp_leases as $lease) { ?>
                                                         <tr data-placement="auto" data-container="body" data-toggle="tooltip"
-                                                            title="Lease type: IPv<?php echo $lease["type"]; ?><br/>Remaining lease time: <?php echo $lease["TIME"]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>">
+                                                            title="Lease type: IPv<?php echo $lease[
+                                                                "type"
+                                                            ]; ?><br/>Remaining lease time: <?php echo $lease[
+    "TIME"
+]; ?><br/>DHCP UID: <?php echo $lease["clid"]; ?>">
                                                             <td id="MAC"><?php echo $lease["hwaddr"]; ?></td>
-                                                            <td id="IP" data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
+                                                            <td id="IP" data-order="<?php echo bin2hex(
+                                                                inet_pton($lease["IP"])
+                                                            ); ?>"><?php echo $lease["IP"]; ?></td>
                                                             <td id="HOST"><?php echo $lease["host"]; ?></td>
                                                             <td>
                                                                 <button type="button" id="button" class="btn btn-warning btn-xs" data-static="alert">
@@ -741,7 +795,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                         <?php foreach ($dhcp_static_leases as $lease) { ?>
                                                         <tr>
                                                             <td><?php echo $lease["hwaddr"]; ?></td>
-                                                            <td data-order="<?php echo bin2hex(inet_pton($lease["IP"])); ?>"><?php echo $lease["IP"]; ?></td>
+                                                            <td data-order="<?php echo bin2hex(
+                                                                inet_pton($lease["IP"])
+                                                            ); ?>"><?php echo $lease["IP"]; ?></td>
                                                             <td><?php echo $lease["host"]; ?></td>
                                                             <td><?php if (strlen($lease["hwaddr"]) > 0) { ?>
                                                                 <button type="button" class="btn btn-danger btn-xs" name="removestatic"
@@ -776,14 +832,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     </div>
                                 </div>
                                 <input type="hidden" name="field" value="DHCP">
-                                <input type="hidden" name="token" value="<?php echo $token ?>">
+                                <input type="hidden" name="token" value="<?php echo $token; ?>">
                                 <button type="submit" class="btn btn-primary pull-right">Save</button>
                             </div>
                         </div>
                     </form>
                 </div>
                 <!-- ######################################################### DNS ######################################################### -->
-                <div id="dns" class="tab-pane fade<?php if($tab === "dns"){ ?> in active<?php } ?>">
+                <div id="dns" class="tab-pane fade<?php if ($tab === "dns") { ?> in active<?php } ?>">
                     <form role="form" method="post">
                         <div class="row">
                             <div class="col-lg-6">
@@ -804,28 +860,46 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     <tr>
                                                     <?php if (isset($value["v4_1"])) { ?>
                                                         <td title="<?php echo $value["v4_1"]; ?>">
-                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v4_1"]; ?>" id="DNS4server<?php echo $value["v4_1"]; ?>" value="true" <?php if (in_array($value["v4_1"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS4server<?php echo $value["v4_1"]; ?>"></label></div>
+                                                            <div><input type="checkbox" name="DNSserver<?php echo $value[
+                                                                "v4_1"
+                                                            ]; ?>" id="DNS4server<?php echo $value["v4_1"]; ?>" value="true" <?php if (
+    in_array($value["v4_1"], $DNSactive)
+) { ?>checked<?php } ?>><label for="DNS4server<?php echo $value["v4_1"]; ?>"></label></div>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
                                                     <?php } ?>
                                                     <?php if (isset($value["v4_2"])) { ?>
                                                         <td title="<?php echo $value["v4_2"]; ?>">
-                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v4_2"]; ?>" id="DNS4server<?php echo $value["v4_2"]; ?>" value="true" <?php if (in_array($value["v4_2"], $DNSactive)){ ?>checked<?php } ?>><label for="DNS4server<?php echo $value["v4_2"]; ?>"></label></div>
+                                                            <div><input type="checkbox" name="DNSserver<?php echo $value[
+                                                                "v4_2"
+                                                            ]; ?>" id="DNS4server<?php echo $value["v4_2"]; ?>" value="true" <?php if (
+    in_array($value["v4_2"], $DNSactive)
+) { ?>checked<?php } ?>><label for="DNS4server<?php echo $value["v4_2"]; ?>"></label></div>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
                                                     <?php } ?>
                                                     <?php if (isset($value["v6_1"])) { ?>
                                                         <td title="<?php echo $value["v6_1"]; ?>">
-                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v6_1"]; ?>" id="DNS6server<?php echo $value["v6_1"]; ?>" value="true" <?php if (in_array($value["v6_1"], $DNSactive) && $IPv6connectivity){ ?>checked<?php } if (!$IPv6connectivity) { ?> disabled <?php } ?>><label for="DNS6server<?php echo $value["v6_1"]; ?>"></label></div>
+                                                            <div><input type="checkbox" name="DNSserver<?php echo $value[
+                                                                "v6_1"
+                                                            ]; ?>" id="DNS6server<?php echo $value["v6_1"]; ?>" value="true" <?php
+if (in_array($value["v6_1"], $DNSactive) && $IPv6connectivity) { ?>checked<?php }
+if (!$IPv6connectivity) { ?> disabled <?php }
+?>><label for="DNS6server<?php echo $value["v6_1"]; ?>"></label></div>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
                                                     <?php } ?>
                                                     <?php if (isset($value["v6_2"])) { ?>
                                                         <td title="<?php echo $value["v6_2"]; ?>">
-                                                            <div><input type="checkbox" name="DNSserver<?php echo $value["v6_2"]; ?>" id="DNS6server<?php echo $value["v6_2"]; ?>" value="true" <?php if (in_array($value["v6_2"], $DNSactive) && $IPv6connectivity){ ?>checked<?php } if (!$IPv6connectivity) { ?> disabled <?php } ?>><label for="DNS6server<?php echo $value["v6_2"]; ?>"></label></div>
+                                                            <div><input type="checkbox" name="DNSserver<?php echo $value[
+                                                                "v6_2"
+                                                            ]; ?>" id="DNS6server<?php echo $value["v6_2"]; ?>" value="true" <?php
+if (in_array($value["v6_2"], $DNSactive) && $IPv6connectivity) { ?>checked<?php }
+if (!$IPv6connectivity) { ?> disabled <?php }
+?>><label for="DNS6server<?php echo $value["v6_2"]; ?>"></label></div>
                                                         </td>
                                                     <?php } else { ?>
                                                         <td></td>
@@ -851,12 +925,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <strong>Custom 1 (IPv4)</strong>
                                                 <div class="row">
                                                     <div class="col-md-1"><div>
-                                                        <input type="checkbox" name="custom1" id="custom1" value="Customv4" <?php if (isset($custom1)){ ?>checked<?php } ?>>
+                                                        <input type="checkbox" name="custom1" id="custom1" value="Customv4" <?php if (
+                                                            isset($custom1)
+                                                        ) { ?>checked<?php } ?>>
                                                         <label for="custom1"></label></div>
                                                     </div>
                                                     <div class="col-md-11">
                                                         <input type="text" name="custom1val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                                <?php if (isset($custom1)){ ?>value="<?php echo $custom1; ?>"<?php } ?>>
+                                                                <?php if (isset($custom1)) { ?>value="<?php echo $custom1; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -864,12 +940,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <strong>Custom 2 (IPv4)</strong>
                                                 <div class="row">
                                                     <div class="col-md-1"><div>
-                                                        <input type="checkbox" name="custom2" id="custom2" value="Customv4" <?php if (isset($custom2)){ ?>checked<?php } ?>>
+                                                        <input type="checkbox" name="custom2" id="custom2" value="Customv4" <?php if (
+                                                            isset($custom2)
+                                                        ) { ?>checked<?php } ?>>
                                                         <label for="custom2"></label></div>
                                                     </div>
                                                     <div class="col-md-11">
                                                         <input type="text" name="custom2val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                               <?php if (isset($custom2)){ ?>value="<?php echo $custom2; ?>"<?php } ?>>
+                                                               <?php if (isset($custom2)) { ?>value="<?php echo $custom2; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -879,12 +957,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <strong>Custom 3 (IPv6)</strong>
                                                 <div class="row">
                                                     <div class="col-md-1"><div>
-                                                        <input type="checkbox" name="custom3" id="custom3" value="Customv6" <?php if (isset($custom3)){ ?>checked<?php } ?>>
+                                                        <input type="checkbox" name="custom3" id="custom3" value="Customv6" <?php if (
+                                                            isset($custom3)
+                                                        ) { ?>checked<?php } ?>>
                                                         <label for="custom3"></label></div>
                                                     </div>
                                                     <div class="col-md-11">
                                                         <input type="text" name="custom3val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                                <?php if (isset($custom3)){ ?>value="<?php echo $custom3; ?>"<?php } ?>>
+                                                                <?php if (isset($custom3)) { ?>value="<?php echo $custom3; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -892,12 +972,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <strong>Custom 4 (IPv6)</strong>
                                                 <div class="row">
                                                     <div class="col-md-1"><div>
-                                                        <input type="checkbox" name="custom4" id="custom4" value="Customv6" <?php if (isset($custom4)){ ?>checked<?php } ?>>
+                                                        <input type="checkbox" name="custom4" id="custom4" value="Customv6" <?php if (
+                                                            isset($custom4)
+                                                        ) { ?>checked<?php } ?>>
                                                         <label for="custom4"></label></div>
                                                     </div>
                                                     <div class="col-md-11">
                                                         <input type="text" name="custom4val" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                               <?php if (isset($custom4)){ ?>value="<?php echo $custom4; ?>"<?php } ?>>
+                                                               <?php if (isset($custom4)) { ?>value="<?php echo $custom4; ?>"<?php } ?>>
                                                     </div>
                                                 </div>
                                             </div>
@@ -916,17 +998,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <div class="form-group">
                                                     <div>
                                                         <input type="radio" name="DNSinterface" id="DNSinterface1" value="local"
-                                                                <?php if ($DNSinterface == "local"){ ?>checked<?php } ?>>
+                                                                <?php if ($DNSinterface == "local") { ?>checked<?php } ?>>
                                                         <label for="DNSinterface1"><strong>Listen on all interfaces</strong><br>Allows only queries from devices that are at most one hop away (local devices)</label>
                                                     </div>
                                                     <div>
                                                         <input type="radio" name="DNSinterface" id="DNSinterface2" value="single"
-                                                                <?php if ($DNSinterface == "single"){ ?>checked<?php } ?>>
-                                                        <label for="DNSinterface2"><strong>Listen only on interface <?php echo htmlentities($piHoleInterface); ?></strong></label>
+                                                                <?php if ($DNSinterface == "single") { ?>checked<?php } ?>>
+                                                        <label for="DNSinterface2"><strong>Listen only on interface <?php echo htmlentities(
+                                                            $piHoleInterface
+                                                        ); ?></strong></label>
                                                     </div>
                                                     <div>
                                                         <input type="radio" name="DNSinterface" id="DNSinterface3" value="all"
-                                                                <?php if ($DNSinterface == "all"){ ?>checked<?php } ?>>
+                                                                <?php if ($DNSinterface == "all") { ?>checked<?php } ?>>
                                                         <label for="DNSinterface3"><strong>Listen on all interfaces, permit all origins</strong></label>
                                                     </div>
                                                 </div>
@@ -952,18 +1036,24 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div>
-                                                    <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed" <?php if ($DNSrequiresFQDN){ ?>checked<?php } ?>>
+                                                    <input type="checkbox" name="DNSrequiresFQDN" id="DNSrequiresFQDN" title="domain-needed" <?php if (
+                                                        $DNSrequiresFQDN
+                                                    ) { ?>checked<?php } ?>>
                                                     <label for="DNSrequiresFQDN"><strong>Never forward non-FQDNs</strong></label>
                                                 </div>
                                                 <div>
-                                                    <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv" <?php if ($DNSbogusPriv){ ?>checked<?php } ?>>
+                                                    <input type="checkbox" name="DNSbogusPriv" id="DNSbogusPriv" title="bogus-priv" <?php if (
+                                                        $DNSbogusPriv
+                                                    ) { ?>checked<?php } ?>>
                                                     <label for="DNSbogusPriv"><strong>Never forward reverse lookups for private IP ranges</strong></label>
                                                     <p>Note that enabling these two options may increase your privacy
                                                     slightly, but may also prevent you from being able to access
                                                     local hostnames if the Pi-hole is not used as DHCP server</p>
                                                 </div>
                                                 <div>
-                                                    <input type="checkbox" name="DNSSEC" id="DNSSEC" <?php if ($DNSSEC){ ?>checked<?php } ?>>
+                                                    <input type="checkbox" name="DNSSEC" id="DNSSEC" <?php if (
+                                                        $DNSSEC
+                                                    ) { ?>checked<?php } ?>>
                                                     <label for="DNSSEC"><strong>Use DNSSEC</strong></label>
                                                     <p>Validate DNS replies and cache DNSSEC data. When forwarding DNS
                                                     queries, Pi-hole requests the DNSSEC records needed to validate
@@ -986,7 +1076,10 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <p>Note: The local domain name must match the domain name specified
                                                         in your DHCP server, likely found within the DHCP settings.</p>
                                                 <div>
-                                                    <input type="checkbox" name="conditionalForwarding" id="conditionalForwarding" value="conditionalForwarding" <?php if(isset($conditionalForwarding) && ($conditionalForwarding == true)){ ?>checked<?php } ?>>
+                                                    <input type="checkbox" name="conditionalForwarding" id="conditionalForwarding" value="conditionalForwarding" <?php if (
+                                                        isset($conditionalForwarding) &&
+                                                        $conditionalForwarding == true
+                                                    ) { ?>checked<?php } ?>>
                                                     <label for="conditionalForwarding"><strong>Use Conditional Forwarding</strong></label>
                                                 </div>
                                                 <div class="input-group">
@@ -999,10 +1092,14 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                         <div class="input-group">
                                                         <td>
                                                             <input type="text" name="conditionalForwardingIP" class="form-control" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                            <?php if(isset($conditionalForwardingIP)){ ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>>
+                                                            <?php if (
+                                                                isset($conditionalForwardingIP)
+                                                            ) { ?>value="<?php echo $conditionalForwardingIP; ?>"<?php } ?>>
                                                         </td>
                                                         <td><input type="text" name="conditionalForwardingDomain" class="form-control" data-mask autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
-                                                            <?php if(isset($conditionalForwardingDomain)){ ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>>
+                                                            <?php if (
+                                                                isset($conditionalForwardingDomain)
+                                                            ) { ?>value="<?php echo $conditionalForwardingDomain; ?>"<?php } ?>>
                                                         </td>
                                                         </div>
                                                     </tr>
@@ -1013,22 +1110,20 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     </div>
                                 </div>
                                 <input type="hidden" name="field" value="DNS">
-                                <input type="hidden" name="token" value="<?php echo $token ?>">
+                                <input type="hidden" name="token" value="<?php echo $token; ?>">
                                 <button type="submit" class="btn btn-primary pull-right">Save</button>
                             </div>
                         </div>
                     </form>
                 </div>
                 <!-- ######################################################### API and Web ######################################################### -->
-                <?php
-                // Administrator email address
+                <?php // Administrator email address
                 if (isset($setupVars["ADMIN_EMAIL"])) {
                     $adminemail = $setupVars["ADMIN_EMAIL"];
                 } else {
                     $adminemail = "";
-                }
-                ?>
-                <div id="api" class="tab-pane fade<?php if($tab === "api"){ ?> in active<?php } ?>">
+                } ?>
+                <div id="api" class="tab-pane fade<?php if ($tab === "api") { ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-md-6">
                             <form role="form" method="post">
@@ -1049,8 +1144,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     <label>Top Domains / Top Advertisers</label>
                                                     <textarea name="domains" class="form-control" placeholder="Enter one domain per line" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                               rows="4"><?php foreach ($excludedDomains as $domain) {
-                                                                             echo $domain . "\n"; }
-                                                                       ?></textarea>
+                                                                  echo $domain . "\n";
+                                                              } ?></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-6 col-md-12 col-lg-6">
@@ -1058,8 +1153,8 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                     <label>Top Clients</label>
                                                     <textarea name="clients" class="form-control" placeholder="Enter one IP address or host name per line" autocomplete="off" spellcheck="false" autocapitalize="none" autocorrect="off"
                                                               rows="4"><?php foreach ($excludedClients as $client) {
-                                                                             echo $client . "\n"; }
-                                                                       ?></textarea>
+                                                                  echo $client . "\n";
+                                                              } ?></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -1071,13 +1166,19 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div>
-                                                    <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <?php if($queryLog === "permittedonly" || $queryLog === "all"){ ?>checked<?php } ?>>
+                                                    <input type="checkbox" name="querylog-permitted" id="querylog-permitted" <?php if (
+                                                        $queryLog === "permittedonly" ||
+                                                        $queryLog === "all"
+                                                    ) { ?>checked<?php } ?>>
                                                     <label for="querylog-permitted"><strong>Show permitted domain entries</strong></label>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <div>
-                                                <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <?php if($queryLog === "blockedonly" || $queryLog === "all"){ ?>checked<?php } ?>>
+                                                <input type="checkbox" name="querylog-blocked" id="querylog-blocked" <?php if (
+                                                    $queryLog === "blockedonly" ||
+                                                    $queryLog === "all"
+                                                ) { ?>checked<?php } ?>>
                                                 <label for="querylog-blocked"><strong>Show blocked domain entries</strong></label>
                                                 </div>
                                             </div>
@@ -1085,7 +1186,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     </div>
                                     <div class="box-footer clearfix">
                                         <input type="hidden" name="field" value="API">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                         <button type="button" class="btn btn-primary api-token">Show API token</button>
                                         <button type="submit" class="btn btn-primary pull-right">Save</button>
                                     </div>
@@ -1108,7 +1209,9 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div>
-                                                    <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if ($boxedlayout){ ?>checked<?php } ?>>
+                                                    <input type="checkbox" name="boxedlayout" id="boxedlayout" value="yes" <?php if (
+                                                        $boxedlayout
+                                                    ) { ?>checked<?php } ?>>
                                                     <label for="boxedlayout"><strong>Use boxed layout (for large screens)</strong></label>
                                                 </div>
                                             </div>
@@ -1116,9 +1219,11 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <h4>Administrator Email Address</h4>
-                                                <input type="email" class="form-control" name="adminemail" value="<?php echo htmlspecialchars($adminemail); ?>">
+                                                <input type="email" class="form-control" name="adminemail" value="<?php echo htmlspecialchars(
+                                                    $adminemail
+                                                ); ?>">
                                                 <input type="hidden" name="field" value="webUI">
-                                                <input type="hidden" name="token" value="<?php echo $token ?>">
+                                                <input type="hidden" name="token" value="<?php echo $token; ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -1215,15 +1320,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                     </div>
                 </div>
                 <!-- ######################################################### Privacy (may be expanded further later on) ######################################################### -->
-                <?php
-                // Get privacy level from piholeFTL config array
+                <?php // Get privacy level from piholeFTL config array
                 if (isset($piholeFTLConf["PRIVACYLEVEL"])) {
                     $privacylevel = intval($piholeFTLConf["PRIVACYLEVEL"]);
                 } else {
                     $privacylevel = 0;
-                }
-                ?>
-                <div id="privacy" class="tab-pane fade<?php if($tab === "privacy"){ ?> in active<?php } ?>">
+                } ?>
+                <div id="privacy" class="tab-pane fade<?php if ($tab === "privacy") { ?> in active<?php } ?>">
                     <div class="row">
                         <div class="col-md-12">
                             <form role="form" method="post">
@@ -1237,27 +1340,35 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                                 <h4>DNS resolver privacy level</h4>
                                                 <p>Specify if DNS queries should be anonymized, available options are:</p>
                                                 <div>
-                                                    <input type="radio" name="privacylevel" id="privacylevel_0" value="0" <?php if ($privacylevel === 0){ ?>checked<?php } ?>>
+                                                    <input type="radio" name="privacylevel" id="privacylevel_0" value="0" <?php if (
+                                                        $privacylevel === 0
+                                                    ) { ?>checked<?php } ?>>
                                                     <label for="privacylevel_0"><strong>Show everything and record everything</strong></label>
                                                     <p>Gives maximum amount of statistics</p>
                                                 </div>
                                                 <div>
-                                                    <input type="radio" name="privacylevel" id="privacylevel_1" value="1" <?php if ($privacylevel === 1){ ?>checked<?php } ?>>
+                                                    <input type="radio" name="privacylevel" id="privacylevel_1" value="1" <?php if (
+                                                        $privacylevel === 1
+                                                    ) { ?>checked<?php } ?>>
                                                     <label for="privacylevel_1"><strong>Hide domains: Display and store all domains as "hidden"</strong></label>
                                                     <p>This disables the Top Domains and Top Ads tables on the dashboard</p>
                                                 </div>
                                                 <div>
-                                                    <input type="radio" name="privacylevel" id="privacylevel_2" value="2" <?php if ($privacylevel === 2){ ?>checked<?php } ?>>
+                                                    <input type="radio" name="privacylevel" id="privacylevel_2" value="2" <?php if (
+                                                        $privacylevel === 2
+                                                    ) { ?>checked<?php } ?>>
                                                     <label for="privacylevel_2"><strong>Hide domains and clients: Display and store all domains as "hidden" and all clients as "0.0.0.0"</strong></label>
                                                     <p>This disables all tables on the dashboard</p>
                                                 </div>
                                                 <div>
-                                                    <input type="radio" name="privacylevel" id="privacylevel_3" value="3" <?php if ($privacylevel === 3){ ?>checked<?php } ?>>
+                                                    <input type="radio" name="privacylevel" id="privacylevel_3" value="3" <?php if (
+                                                        $privacylevel === 3
+                                                    ) { ?>checked<?php } ?>>
                                                     <label for="privacylevel_3"><strong>Anonymous mode: This disables basically everything except the live anonymous statistics</strong></label>
                                                     <p>No history is saved at all to the database, and nothing is shown in the query log. Also, there are no top item lists.</p>
                                                 </div>
                                                 <p>The privacy level may be increased at any time without having to restart the DNS resolver. However, note that the DNS resolver needs to be restarted when lowering the privacy level. This restarting is automatically done when saving.</p>
-                                                <?php if($privacylevel > 0 && $piHoleLogging){ ?>
+                                                <?php if ($privacylevel > 0 && $piHoleLogging) { ?>
                                                 <p class="lookatme">Warning: Pi-hole's query logging is activated. Although the dashboard will hide the requested details, all queries are still fully logged to the pihole.log file.</p>
                                                 <?php } ?>
                                             </div>
@@ -1265,7 +1376,7 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                                     </div>
                                     <div class="box-footer clearfix">
                                         <input type="hidden" name="field" value="privacyLevel">
-                                        <input type="hidden" name="token" value="<?php echo $token ?>">
+                                        <input type="hidden" name="token" value="<?php echo $token; ?>">
                                         <button type="submit" class="btn btn-primary pull-right">Apply</button>
                                     </div>
                                 </div>
@@ -1274,13 +1385,13 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
                     </div>
                 </div>
                 <!-- ######################################################### Teleporter ######################################################### -->
-                <div id="teleporter" class="tab-pane fade<?php if($tab === "teleporter"){ ?> in active<?php } ?>">
+                <div id="teleporter" class="tab-pane fade<?php if ($tab === "teleporter") { ?> in active<?php } ?>">
                     <div class="row">
                         <?php if (extension_loaded('Phar')) { ?>
                         <form role="form" method="post" id="takeoutform"
                               action="scripts/pi-hole/php/teleporter.php"
                               target="_blank" enctype="multipart/form-data">
-                            <input type="hidden" name="token" value="<?php echo $token ?>">
+                            <input type="hidden" name="token" value="<?php echo $token; ?>">
                             <div class="col-lg-6 col-md-12">
                                 <div class="box box-warning">
                                     <div class="box-header with-border">
@@ -1398,6 +1509,5 @@ if (isset($_GET['tab']) && in_array($_GET['tab'], array("sysadmin", "adlists", "
 <script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/settings.js"></script>
 
-<?php
-require "scripts/pi-hole/php/footer.php";
+<?php require "scripts/pi-hole/php/footer.php";
 ?>

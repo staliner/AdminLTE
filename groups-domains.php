@@ -1,19 +1,19 @@
 <?php /*
-*    Pi-hole: A black hole for Internet advertisements
-*    (c) 2019 Pi-hole, LLC (https://pi-hole.net)
-*    Network-wide ad blocking via your own hardware.
-*
-*    This file is copyright under the latest version of the EUPL.
-*    Please see LICENSE file for your rights under this license. */
-    require "scripts/pi-hole/php/header.php";
-    $type = "all";
-    $pagetitle = "Domain";
-    $adjective = "";
-    if (isset($_GET['type']) && ($_GET['type'] === "white" || $_GET['type'] === "black")) {
-        $type = $_GET['type'];
-        $pagetitle = ucfirst($type)."list";
-        $adjective = $type."listed";
-    }
+ *    Pi-hole: A black hole for Internet advertisements
+ *    (c) 2019 Pi-hole, LLC (https://pi-hole.net)
+ *    Network-wide ad blocking via your own hardware.
+ *
+ *    This file is copyright under the latest version of the EUPL.
+ *    Please see LICENSE file for your rights under this license. */
+require "scripts/pi-hole/php/header.php";
+$type = "all";
+$pagetitle = "Domain";
+$adjective = "";
+if (isset($_GET['type']) && ($_GET['type'] === "white" || $_GET['type'] === "black")) {
+    $type = $_GET['type'];
+    $pagetitle = ucfirst($type) . "list";
+    $adjective = $type . "listed";
+}
 ?>
 
 <!-- Title -->
@@ -89,15 +89,18 @@
                     </div>
                 </div>
                 <div class="btn-toolbar pull-right" role="toolbar" aria-label="Toolbar with buttons">
-                    <?php if ( $type !== "white" ) { ?>
+                    <?php
+                    if ($type !== "white") { ?>
                     <div class="btn-group" role="group" aria-label="Third group">
                         <button type="button" class="btn btn-primary" id="add2black">Add to Blacklist</button>
                     </div>
-                    <?php } if ( $type !== "black" ) { ?>
+                    <?php }
+                    if ($type !== "black") { ?>
                     <div class="btn-group" role="group" aria-label="Third group">
                         <button type="button" class="btn btn-primary" id="add2white">Add to Whitelist</button>
                     </div>
-                    <?php } ?>
+                    <?php }
+                    ?>
                 </div>
             </div>
             <!-- /.box-body -->
@@ -143,6 +146,5 @@
 <script src="scripts/pi-hole/js/utils.js"></script>
 <script src="scripts/pi-hole/js/groups-domains.js"></script>
 
-<?php
-require "scripts/pi-hole/php/footer.php";
+<?php require "scripts/pi-hole/php/footer.php";
 ?>
