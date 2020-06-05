@@ -103,7 +103,7 @@ $(function () {
       // Insert "Never" into Last Query field when we have
       // never seen a query from this device
       if (data.lastQuery === 0) {
-        $("td:eq(5)", row).html("Never");
+        $("td:eq(5)", row).text("Never");
       }
 
       // Set hostname to "unknown" if not available

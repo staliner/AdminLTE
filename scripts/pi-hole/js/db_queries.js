@@ -77,15 +77,15 @@ function add(domain, list) {
   var alInfo = $("#alInfo");
   var alList = $("#alList");
   var alDomain = $("#alDomain");
-  alDomain.html(domain);
+  alDomain.text(domain);
   var alSuccess = $("#alSuccess");
   var alFailure = $("#alFailure");
   var err = $("#err");
 
   if (list === "white") {
-    alList.html("Whitelist");
+    alList.text("Whitelist");
   } else {
-    alList.html("Blacklist");
+    alList.text("Blacklist");
   }
 
   alInfo.show();
@@ -104,7 +104,7 @@ function add(domain, list) {
     success: function (response) {
       if (!response.success) {
         alFailure.show();
-        err.html(response.message);
+        err.text(response.message);
         alFailure.delay(4000).fadeOut(2000, function () {
           alFailure.hide();
         });

@@ -32,8 +32,8 @@ function add(domain, list) {
     listtype = "Blacklist";
   }
 
-  alProcessing.children(alDomain).html(domain);
-  alProcessing.children(alList).html(listtype);
+  alProcessing.children(alDomain).text(domain);
+  alProcessing.children(alList).text(listtype);
   alertModal.modal("show");
 
   // add Domain to List after Modal has faded in
@@ -53,15 +53,15 @@ function add(domain, list) {
         if (!response.success) {
           // Failure
           alNetworkErr.hide();
-          alCustomErr.html(response.message);
+          alCustomErr.text(response.message);
           alFailure.fadeIn(1000);
           setTimeout(function () {
             alertModal.modal("hide");
           }, 3000);
         } else {
           // Success
-          alSuccess.children(alDomain).html(domain);
-          alSuccess.children(alList).html(listtype);
+          alSuccess.children(alDomain).text(domain);
+          alSuccess.children(alList).text(listtype);
           alSuccess.fadeIn(1000);
           setTimeout(function () {
             alertModal.modal("hide");

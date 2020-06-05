@@ -13,7 +13,7 @@ function eventsource() {
   // IE does not support EventSource - exit early
   if (typeof EventSource !== "function") {
     ta.show();
-    ta.html("Updating lists of ad-serving domains is not supported with this browser!");
+    ta.text("Updating lists of ad-serving domains is not supported with this browser!");
     return;
   }
 
