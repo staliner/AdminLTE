@@ -318,8 +318,8 @@ function addDomain() {
     commentEl = $("#new_regex_comment");
   }
 
-  var domain = domainEl.val();
-  var comment = commentEl.val();
+  var domain = utils.escapeHtml(domainEl.val());
+  var comment = utils.escapeHtml(commentEl.val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding " + domainRegex + "...", domain);
@@ -388,7 +388,7 @@ function editDomain() {
   var domain = tr.find("#domain_" + id).text();
   var type = tr.find("#type_" + id).val();
   var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
-  var comment = tr.find("#comment_" + id).val();
+  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
 
   // Show group assignment field only if in full domain management mode
   // if not included, just use the row data.

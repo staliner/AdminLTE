@@ -246,9 +246,9 @@ function initTable() {
 
 function addClient() {
   var ip = $("#select").val();
-  var comment = $("#new_comment").val();
+  var comment = utils.escapeHtml($("#new_comment").val());
   if (ip === "custom") {
-    ip = $("#ip-custom").val().trim();
+    ip = utils.escapeHtml($("#ip-custom").val().trim());
   }
 
   utils.disableAll();
@@ -305,7 +305,7 @@ function editClient() {
   var groups = tr.find("#multiselect_" + id).val();
   var ip = tr.find("#ip_" + id).text();
   var name = tr.find("#name_" + id).text();
-  var comment = tr.find("#comment_" + id).val();
+  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
 
   var done = "edited";
   var notDone = "editing";

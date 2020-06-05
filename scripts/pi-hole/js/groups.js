@@ -127,8 +127,8 @@ $(function () {
 });
 
 function addGroup() {
-  var name = $("#new_name").val();
-  var desc = $("#new_desc").val();
+  var name = utils.escapeHtml($("#new_name").val());
+  var desc = utils.escapeHtml($("#new_desc").val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding group...", name);

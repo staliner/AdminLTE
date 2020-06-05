@@ -212,8 +212,8 @@ function initTable() {
 }
 
 function addAdlist() {
-  var address = $("#new_address").val();
-  var comment = $("#new_comment").val();
+  var address = utils.escapeHtml($("#new_address").val());
+  var comment = utils.escapeHtml($("#new_comment").val());
 
   utils.disableAll();
   utils.showAlert("info", "", "Adding adlist...", address);
@@ -258,7 +258,7 @@ function editAdlist() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
   var status = tr.find("#status_" + id).is(":checked") ? 1 : 0;
-  var comment = tr.find("#comment_" + id).val();
+  var comment = utils.escapeHtml(tr.find("#comment_" + id).val());
   var groups = tr.find("#multiselect_" + id).val();
   var address = tr.find("#address_" + id).text();
 
