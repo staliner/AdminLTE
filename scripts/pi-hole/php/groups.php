@@ -58,7 +58,10 @@ if ($_POST['action'] == 'get_groups') {
 } elseif ($_POST['action'] == 'add_group') {
     // Add new group
     try {
-        $names = str_getcsv(trim($_POST['name']), ' ');
+        // Payload from the web interface will have been sanitised with " converted to &quot;
+        // so before we process the input, we will do the opposite and replace &quot; with ";
+        $input = str_replace("&quot;","\"",trim($_POST['name']));
+        $names = str_getcsv($input, ' ');
         $total = count($names);
         $added = 0;
         $stmt = $db->prepare('INSERT INTO "group" (name,description) VALUES (:name,:desc)');
