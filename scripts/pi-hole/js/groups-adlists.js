@@ -338,7 +338,7 @@ function editAdlist() {
 function deleteAdlist() {
   var tr = $(this).closest("tr");
   var id = tr.attr("data-id");
-  var address = tr.find("#address_" + id).text();
+  var address = utils.escapeHtml(tr.find("#address_" + id).text());
 
   utils.disableAll();
   utils.showAlert("info", "", "Deleting adlist...", address);
